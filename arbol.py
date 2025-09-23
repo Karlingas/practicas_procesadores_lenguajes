@@ -34,6 +34,7 @@ class arbol:
                 return self.dcho.Esta(value)
     
     def __str__(self):
+        # Imprime en inorden
         resultado = ""
         if self.izdo is not None:
             resultado += str(self.izdo) + ", "
