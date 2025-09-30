@@ -97,7 +97,7 @@ class Flujo:
         return f'Ruta={self.ruta}\nFlujo:\n{self.flujo}'
     
 
-# Pruebas
+# Pruebas ej 1
 def dondeEstoy(flujo):
     print("Nº Linea: ",flujo.NumLinea())
     print("Nº Caracter: ",flujo.NumCaracter())
