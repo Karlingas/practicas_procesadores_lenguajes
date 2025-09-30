@@ -22,11 +22,17 @@ class Flujo:
         self.contadorCaracter = 0
         self.caracteresEnLinea = []
 
-    ''' Devuelve el siguiente carácter del flujo
+    ''' Devuelve el siguiente carácter del flujo 
+        (None si es el final del flujo EOF)
     '''
     def NewCar(self):
-        if self.indiceFlujo >= len(self.flujo):
+        if self.indiceFlujo == len(self.flujo): # Si hemos llegado al final del flujo EOF
+            self.contadorCaracter += 1
+            self.indiceFlujo += 1
             return None
+        elif self.indiceFlujo > len(self.flujo): # Si ya hemos devuelto el EOF
+            return None
+        
         caracter = self.flujo[self.indiceFlujo]
         
         self.indiceFlujo += 1
@@ -42,6 +48,9 @@ class Flujo:
     ''' Devuelve el flujo una posición atrás
     '''
     def Devolver(self):
+        if self.indiceFlujo <= 0: # Si estamos al inicio del flujo
+            return
+        
         self.indiceFlujo -= 1
         if self.contadorCaracter > 0:
             self.contadorCaracter -= 1
@@ -49,17 +58,21 @@ class Flujo:
             self.contadorLinea -= 1
             self.contadorCaracter = self.caracteresEnLinea.pop()
 
-    ''' Retorna el numero de linea que se está leyendo
+    ''' Retorna el numero de linea que se está leyendo 
+        (0 si es la primera línea)
     '''
     def NumLinea(self):
         if self.contadorCaracter == 0 and self.contadorLinea > 0: # Si estamos al inicio de una nueva línea, retornamos la línea anterior
             return self.contadorLinea - 1
         return self.contadorLinea
 
-    ''' Retorna la posición que ocupa el último carácter leído en la línea actual
+    ''' Retorna la posición que ocupa el último carácter leído en la línea actual 
+        (-1 si no se ha leido ninguno) (0 si es la primera posición)
     '''
     def NumCaracter(self):
         if self.contadorCaracter == 0: # Si estamos al inicio de una nueva línea, retornamos la posición del último carácter de la línea anterior
+            if len(self.caracteresEnLinea) == 0:
+                return -1   # Si no se ha leído previamente ningún carácter
             return self.caracteresEnLinea[-1]
         return self.contadorCaracter - 1
 
@@ -113,4 +126,29 @@ print("(3 devolver)")
 dondeEstoy(flujo)
 
 print(flujo.NewCar())
+dondeEstoy(flujo)
+
+flujo = Flujo('archivosFlujo/biblia_varias_veces.txt')
+print("\nLa biblia")
+print(flujo.NewCar())
+print(flujo.NewCar())
+dondeEstoy(flujo)
+dondeEstoy(flujo)
+
+flujo = Flujo('archivosFlujo/archivo_vacio.txt')
+print("\nArchivo vacio")
+dondeEstoy(flujo)
+
+# Mas caracteres de los que hay en el flujo
+print(flujo.NewCar())
+print(flujo.NewCar())
+print(flujo.NewCar())
+
+dondeEstoy(flujo)
+# Mas devoluciones que caracteres hay
+flujo.Devolver()
+flujo.Devolver()
+flujo.Devolver()
+flujo.Devolver()
+flujo.Devolver()
 dondeEstoy(flujo)
