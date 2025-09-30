@@ -106,30 +106,27 @@ class tablaSimbolos():
     
 # Ejercicio 2 de Practica 1
 
-def main():
-    tabla = tablaSimbolos()
-    tabla.Insertar("x", ("Entero", 10,10000))
-    tabla.Insertar("y", ("Cadena", "Hola Mundo",10100))
-    print(tabla)
 
-    tabla.Insertar("z", ("Booleano", True,10200))
-    tabla.Modificar("x", ("Real", 3.14,10000))
-    print(tabla)
+tabla = tablaSimbolos()
+tabla.Insertar("x", ("Entero", 10,10000))
+tabla.Insertar("y", ("Cadena", "Hola Mundo",10100))
+print(tabla)
 
-    print(tabla.Existe("x"))
-    print(tabla.Existe("a"))
-    print(tabla.Valor("y"))
+tabla.Insertar("z", ("Booleano", True,10200))
+tabla.Modificar("x", ("Real", 3.14,10000))
+print(tabla)
+
+print(tabla.Existe("x"))
+print(tabla.Existe("a"))
+print(tabla.Valor("y"))
     
     
-    tabla.InsertarEscalar("entero_1","Entero", 10300,64,10)
-    tabla.InsertarVectorial("vector_2","Double",10400,64)
-    tabla.InsertarFuncion("funcion_3",3,("Entero,String,Double"),"Entero")
-    print(tabla)
+tabla.InsertarEscalar("entero_1","Entero", 10300,64,10)
+tabla.InsertarVectorial("vector_2","Double",10400,64)
+tabla.InsertarFuncion("funcion_3",3,("Entero,String,Double"),"Entero")
+print(tabla)
 
-    tabla.ModificarEscalar("entero_1","Double",2,3,4)
-    tabla.ModificarVectorial("vector_2","String",333,1)
-    tabla.ModificarFuncion("funcion_3",4,("Entero", "String","Boolean","Double"),("String","Boolean"))
-    print(tabla)
-
-
-main()
+tabla.ModificarEscalar("entero_1","Double",2,3,4)
+tabla.ModificarVectorial("vector_2","String",333,1)
+tabla.ModificarFuncion("funcion_3",4,("Entero", "String","Boolean","Double"),("String","Boolean"))
+print(tabla)
