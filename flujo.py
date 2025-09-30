@@ -78,8 +78,8 @@ class Flujo:
     '''
     def DevolverN(self, n):
         n = abs(n)
-        if n >= self.indiceFlujo:
-            n = self.indiceFlujo # Se tiene que contar el EOF
+        if n > self.indiceFlujo:
+            n = self.indiceFlujo # Se tiene que contar el EOF (n = inidiceFlujo)
 
         for _ in range(n):
             self.Devolver()
