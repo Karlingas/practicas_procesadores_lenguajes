@@ -17,11 +17,6 @@ class Flujo:
         self.flujo = archivo.read()
         archivo.close()
 
-        self.indiceFlujo = 0
-        self.contadorLinea = 0
-        self.contadorCaracter = 0
-        self.caracteresEnLinea = []
-
     ''' Devuelve el siguiente carácter del flujo 
         (None si es el final del flujo EOF)
     '''
@@ -84,7 +79,7 @@ class Flujo:
     def DevolverN(self, n):
         n = abs(n)
         if n >= self.indiceFlujo:
-            n = self.indiceFlujo - 1
+            n = self.indiceFlujo # Se tiene que contar el EOF
 
         for _ in range(n):
             self.Devolver()
@@ -128,15 +123,18 @@ dondeEstoy(flujo)
 print(flujo.NewCar())
 dondeEstoy(flujo)
 
+print(flujo.AvanzarN(100))
+dondeEstoy(flujo)
+
 flujo = Flujo('archivosFlujo/biblia_varias_veces.txt')
-print("\nLa biblia")
+print("\n--La biblia--")
 print(flujo.NewCar())
 print(flujo.NewCar())
 dondeEstoy(flujo)
 dondeEstoy(flujo)
 
 flujo = Flujo('archivosFlujo/archivo_vacio.txt')
-print("\nArchivo vacio")
+print("\n--Archivo vacio--")
 dondeEstoy(flujo)
 
 # Mas caracteres de los que hay en el flujo
@@ -146,9 +144,5 @@ print(flujo.NewCar())
 
 dondeEstoy(flujo)
 # Mas devoluciones que caracteres hay
-flujo.Devolver()
-flujo.Devolver()
-flujo.Devolver()
-flujo.Devolver()
-flujo.Devolver()
+flujo.DevolverN(1)
 dondeEstoy(flujo)
