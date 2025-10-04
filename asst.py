@@ -1,3 +1,5 @@
+# TODO: Documentar con comentarios docstring
+
 class AST:
     def __init__(self): pass
     def mostrar(self): pass             # muestra la expresion utilizando parentesis

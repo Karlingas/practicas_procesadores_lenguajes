@@ -9,9 +9,18 @@ class Flujo:
     caracteresEnLinea = []
 
     def __init__(self, ruta):
+        """
+        Inicializa una instancia del flujo a partir de un archivo de texto.
+
+        Args:
+            ruta (str): Ruta del archivo a leer.
+
+        Raises:
+            FileNotFoundError: Si el archivo no existe en la ruta proporcionada.
+        """
         if not os.path.isfile(ruta):
             raise FileNotFoundError(f'El archivo {ruta} no existe.')
-        
+
         self.ruta = ruta
         archivo = open(ruta, 'r')
         self.flujo = archivo.read()
@@ -20,23 +29,26 @@ class Flujo:
         self.indiceFlujo = 0
         self.contadorLinea = 0
         self.contadorCaracter = 0
-        self.caracteresEnLinea = [] 
-        
-        
-    ''' Devuelve el siguiente carácter del flujo 
-        (None si es el final del flujo EOF)
-        (False si no quedan más carácteres)
-    '''
+        self.caracteresEnLinea = []
+
     def NewCar(self):
-        if self.indiceFlujo == len(self.flujo): # Si hemos llegado al final del flujo EOF
+        """
+        Devuelve el siguiente carácter del flujo.
+
+        Returns:
+            str | None | bool:
+                - str: El siguiente carácter del flujo.
+                - None: Si se alcanzó el final del flujo (EOF).
+                - False: Si ya no quedan más caracteres después del EOF.
+        """
+        if self.indiceFlujo == len(self.flujo):  # Si hemos llegado al final del flujo EOF
             self.contadorCaracter += 1
             self.indiceFlujo += 1
             caracter = None
-        elif self.indiceFlujo > len(self.flujo): # Si ya hemos devuelto el EOF
+        elif self.indiceFlujo > len(self.flujo):  # Si ya hemos devuelto el EOF
             caracter = False
         else:
             caracter = self.flujo[self.indiceFlujo]
-            
             self.indiceFlujo += 1
             if caracter == '\n':
                 self.contadorLinea += 1
@@ -47,13 +59,16 @@ class Flujo:
 
         return caracter
 
-    ''' Devuelve el flujo una posición atrás
-        Retorna True si se ha devuelto exitosamente
-    '''
     def Devolver(self):
-        if self.indiceFlujo <= 0: # Si estamos al inicio del flujo
+        """
+        Retrocede una posición en el flujo.
+
+        Returns:
+            bool: True si el retroceso fue exitoso, False si ya se está al inicio del flujo.
+        """
+        if self.indiceFlujo <= 0:
             return False
-        
+
         self.indiceFlujo -= 1
         if self.contadorCaracter > 0:
             self.contadorCaracter -= 1
@@ -63,45 +78,66 @@ class Flujo:
 
         return True
 
-    ''' Retorna el numero de linea que se está leyendo 
-        (0 si es la primera línea)
-    '''
     def NumLinea(self):
-        if self.contadorCaracter <= 0 and self.contadorLinea > 0: # Si estamos al inicio de una nueva línea, retornamos la línea anterior
+        """
+        Obtiene el número de línea actual en el flujo.
+
+        Returns:
+            int: Número de línea (0 si es la primera).
+        """
+        if self.contadorCaracter <= 0 and self.contadorLinea > 0:
             return self.contadorLinea - 1
         return self.contadorLinea
 
-    ''' Retorna la posición que ocupa el último carácter leído en la línea actual 
-        (-1 si no se ha leido ninguno) (0 si es la primera posición)
-    '''
     def NumCaracter(self):
-        if self.contadorCaracter <= 0: # Si estamos al inicio de una nueva línea, retornamos la posición del último carácter de la línea anterior
+        """
+        Obtiene la posición del último carácter leído en la línea actual.
+
+        Returns:
+            int:
+                - -1 si no se ha leído ningún carácter.
+                - 0 si es el primer carácter de la línea.
+                - n si es la posición n de la línea actual.
+        """
+        if self.contadorCaracter <= 0:
             if len(self.caracteresEnLinea) == 0:
-                return -1   # Si no se ha leído previamente ningún carácter
+                return -1
             return self.caracteresEnLinea[-1]
         return self.contadorCaracter - 1
+    
+    # Funciones adicionales al ejercicio
 
-
-    # Funciones adicionales al ejercicio 
-
-    ''' Devuelve el flujo n posiciones atrás
-        Retorna cuántas posiciones ha retrocedido
-    '''
     def DevolverN(self, n):
+        """
+        Retrocede n posiciones en el flujo.
+
+        Args:
+            n (int): Número de posiciones a retroceder.
+
+        Returns:
+            int: Número de posiciones que se lograron retroceder efectivamente.
+        """
         n = abs(n)
         posiciones = 0
 
         if n > self.indiceFlujo:
-            n = self.indiceFlujo # Se tiene que contar el EOF (n = inidiceFlujo)
+            n = self.indiceFlujo
 
         for _ in range(n):
             if self.Devolver():
                 posiciones += 1
         return posiciones
 
-    ''' Avanza el flujo n posiciones adelante
-    '''
     def AvanzarN(self, n):
+        """
+        Avanza n posiciones en el flujo.
+
+        Args:
+            n (int): Número de posiciones a avanzar.
+
+        Returns:
+            str: Cadena resultante de los caracteres avanzados.
+        """
         n = abs(n)
         if n > len(self.flujo) - self.indiceFlujo:
             n = len(self.flujo) - self.indiceFlujo
@@ -110,14 +146,25 @@ class Flujo:
         for _ in range(n):
             cadena.append(self.NewCar())
         return ''.join(cadena)
-    
-    ''' Reasigna el flujo a otro archivo
-    '''
+
     def Reasignar(self, ruta):
+        """
+        Reasigna el flujo para leer desde otro archivo.
+
+        Args:
+            ruta (str): Ruta del nuevo archivo a leer.
+        """
         self.__init__(ruta)
 
     def __str__(self):
+        """
+        Representación en cadena del flujo.
+
+        Returns:
+            str: Ruta del archivo y contenido del flujo.
+        """
         return f'Ruta={self.ruta}\nFlujo:\n{self.flujo}'
+
     
 
 # Pruebas ej 1
