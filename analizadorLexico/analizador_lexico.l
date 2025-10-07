@@ -1,5 +1,7 @@
 
 %%
+[] {}
+fin {printf("Aqui acaba");}
 
 %%
 
