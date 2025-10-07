@@ -1,6 +1,6 @@
 
 %%
-[] {}
+[ ] {printf("VACIO);}
 fin {printf("Aqui acaba");}
 
 %%
