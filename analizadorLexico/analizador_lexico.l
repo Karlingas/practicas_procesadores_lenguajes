@@ -11,13 +11,13 @@ espacio       [ ]
 salto         [\n]
 
 %%
-{salto}                                     {lineas++;}
-{espacio}                                   { }
-fin                                         { return 0; }
+{salto}                                     { lineas++; }
+{espacio}                                   { caracteres++; }
+fin                                         { lineas++; return 0; }
 {letra}{letraDigito}*                       { printf("Identificador %s\n", yytext); caracteres= caracteres + yyleng; palabras++;}
 -?(0|{digitoNoCero}{digito}*)               { printf("Entero %s\n", yytext);  caracteres= caracteres + yyleng; palabras++;}
 -?(0|{digitoNoCero}{digito}*)\.{digito}+    { printf("Real %s\n", yytext); caracteres= caracteres + yyleng; palabras++; }
-{operador}                                  { printf("Operador %s\n", yytext); caracteres++;}
+{operador}                                  { printf("Operador %s\n", yytext); caracteres++; } //consideramos el operador como un caracter pero no como palabra
 .                                           { printf("Caracter no esperado: %s\n", yytext); }
 
 %%

@@ -733,17 +733,17 @@ case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
 #line 14 "analizador_lexico.l"
-{lineas++;}
+{ lineas++; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 15 "analizador_lexico.l"
-{ }
+{ caracteres++; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 16 "analizador_lexico.l"
-{ return 0; }
+{ lineas++; return 0; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
@@ -763,7 +763,7 @@ YY_RULE_SETUP
 case 7:
 YY_RULE_SETUP
 #line 20 "analizador_lexico.l"
-{ printf("Operador %s\n", yytext); caracteres++;}
+{ printf("Operador %s\n", yytext); caracteres++; } //consideramos el operador como un caracter pero no como palabra
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
