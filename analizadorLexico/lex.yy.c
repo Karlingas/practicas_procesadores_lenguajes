@@ -748,7 +748,7 @@ YY_RULE_SETUP
 case 4:
 YY_RULE_SETUP
 #line 17 "analizador_lexico.l"
-{ printf("identificador %s\n", yytext); caracteres= caracteres + yyleng; palabras++;}
+{ printf("Identificador %s\n", yytext); caracteres= caracteres + yyleng; palabras++;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
@@ -1786,6 +1786,7 @@ void yyfree (void * ptr )
 int main()
 {
     yylex();
+    printf("Lineas: %d, Palabras: %d, Caracteres: %d\n", lineas, palabras, caracteres);
     exit(0);
 }
 
