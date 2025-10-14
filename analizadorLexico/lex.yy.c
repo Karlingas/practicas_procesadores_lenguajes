@@ -351,8 +351,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 8
-#define YY_END_OF_BUFFER 9
+#define YY_NUM_RULES 9
+#define YY_END_OF_BUFFER 10
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -362,8 +362,8 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[22] =
     {   0,
-        0,    0,    9,    7,    8,    1,    6,    6,    4,    4,
-        3,    3,    4,    4,    0,    4,    3,    3,    5,    2,
+        0,    0,   10,    8,    1,    2,    7,    7,    5,    5,
+        4,    4,    5,    5,    0,    5,    4,    4,    6,    3,
         0
     } ;
 
@@ -450,7 +450,10 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "analizador_lexico.l"
-#line 453 "lex.yy.c"
+#line 3 "analizador_lexico.l"
+    int caracteres = 0, palabras = 0, lineas = 0;
+#line 455 "lex.yy.c"
+#line 456 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -667,9 +670,9 @@ YY_DECL
 		}
 
 	{
-#line 8 "analizador_lexico.l"
+#line 13 "analizador_lexico.l"
 
-#line 672 "lex.yy.c"
+#line 675 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -727,46 +730,52 @@ do_action:	/* This label is used only to access EOF actions. */
 			goto yy_find_action;
 
 case 1:
+/* rule 1 can match eol */
 YY_RULE_SETUP
-#line 9 "analizador_lexico.l"
-{ }
+#line 14 "analizador_lexico.l"
+{lineas++;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 10 "analizador_lexico.l"
-{ return 0; }
+#line 15 "analizador_lexico.l"
+{ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 11 "analizador_lexico.l"
-{ printf("identificador %s\n", yytext); }
+#line 16 "analizador_lexico.l"
+{ return 0; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 12 "analizador_lexico.l"
-{ printf("Entero %s\n", yytext); }
+#line 17 "analizador_lexico.l"
+{ printf("identificador %s\n", yytext); caracteres= caracteres + yyleng; palabras++;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 13 "analizador_lexico.l"
-{ printf("Real %s\n", yytext); }
+#line 18 "analizador_lexico.l"
+{ printf("Entero %s\n", yytext);  caracteres= caracteres + yyleng; palabras++;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 14 "analizador_lexico.l"
-{ printf("Operador %s\n", yytext); }
+#line 19 "analizador_lexico.l"
+{ printf("Real %s\n", yytext); caracteres= caracteres + yyleng; palabras++; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 15 "analizador_lexico.l"
-{ printf("Caracter no esperado: %s\n", yytext); }
+#line 20 "analizador_lexico.l"
+{ printf("Operador %s\n", yytext); caracteres++;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 17 "analizador_lexico.l"
+#line 21 "analizador_lexico.l"
+{ printf("Caracter no esperado: %s\n", yytext); }
+	YY_BREAK
+case 9:
+YY_RULE_SETUP
+#line 23 "analizador_lexico.l"
 ECHO;
 	YY_BREAK
-#line 769 "lex.yy.c"
+#line 778 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1771,7 +1780,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 17 "analizador_lexico.l"
+#line 23 "analizador_lexico.l"
 
 
 int main()
