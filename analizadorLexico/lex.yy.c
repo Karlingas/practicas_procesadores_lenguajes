@@ -1,5 +1,5 @@
 
-#line 3 "lex.yy.c"
+#line 2 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -360,11 +360,11 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[23] =
+static const flex_int16_t yy_accept[22] =
     {   0,
         0,    0,    9,    7,    8,    1,    6,    6,    4,    4,
-        3,    3,    4,    4,    0,    4,    3,    3,    0,    5,
-        2,    0
+        3,    3,    4,    4,    0,    4,    3,    3,    5,    2,
+        0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -407,32 +407,32 @@ static const YY_CHAR yy_meta[13] =
 
 static const flex_int16_t yy_base[25] =
     {   0,
-        0,    0,   27,   28,   28,   28,   28,    6,   20,   19,
-        0,   13,   17,   16,    8,    0,    0,    9,    0,    0,
-        0,   28,   15,   16
+        0,    0,   26,   27,   27,   27,   27,    6,   19,   18,
+        0,   12,   16,   15,    0,    0,    0,    8,    0,    0,
+       27,   13,   14,   16
     } ;
 
 static const flex_int16_t yy_def[25] =
     {   0,
-       22,    1,   22,   22,   22,   22,   22,   22,   22,   23,
-       24,   24,   22,   23,   22,   14,   24,   24,   15,   15,
-       24,    0,   22,   22
+       21,    1,   21,   21,   21,   21,   21,   21,   21,   22,
+       23,   23,   21,   22,   24,   14,   23,   23,   24,   23,
+        0,   21,   21,   21
     } ;
 
-static const flex_int16_t yy_nxt[41] =
+static const flex_int16_t yy_nxt[40] =
     {   0,
         4,    5,    6,    7,    8,    4,    9,   10,   11,   12,
-       11,   11,   13,   14,   19,   20,   16,   16,   17,   17,
-       21,   15,   15,   18,   15,   15,   22,    3,   22,   22,
-       22,   22,   22,   22,   22,   22,   22,   22,   22,   22
+       11,   11,   13,   14,   16,   16,   17,   17,   19,   20,
+       15,   15,   18,   15,   15,   21,    3,   21,   21,   21,
+       21,   21,   21,   21,   21,   21,   21,   21,   21
     } ;
 
-static const flex_int16_t yy_chk[41] =
+static const flex_int16_t yy_chk[40] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    8,    8,   15,   15,   23,   23,   24,   24,
-       18,   14,   13,   12,   10,    9,    3,   22,   22,   22,
-       22,   22,   22,   22,   22,   22,   22,   22,   22,   22
+        1,    1,    8,    8,   22,   22,   23,   23,   24,   18,
+       14,   13,   12,   10,    9,    3,   21,   21,   21,   21,
+       21,   21,   21,   21,   21,   21,   21,   21,   21
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -450,7 +450,7 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "analizador_lexico.l"
-#line 454 "lex.yy.c"
+#line 453 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -667,9 +667,9 @@ YY_DECL
 		}
 
 	{
-#line 2 "analizador_lexico.l"
+#line 8 "analizador_lexico.l"
 
-#line 673 "lex.yy.c"
+#line 672 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -696,13 +696,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 23 )
+				if ( yy_current_state >= 22 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 28 );
+		while ( yy_base[yy_current_state] != 27 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -728,45 +728,45 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 3 "analizador_lexico.l"
-{}
+#line 9 "analizador_lexico.l"
+{ }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 4 "analizador_lexico.l"
-{return 0;}
+#line 10 "analizador_lexico.l"
+{ return 0; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 5 "analizador_lexico.l"
-{printf("identificador %s\n",yytext);}
+#line 11 "analizador_lexico.l"
+{ printf("identificador %s\n", yytext); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 6 "analizador_lexico.l"
-{printf("Entero %s\n",yytext);}
+#line 12 "analizador_lexico.l"
+{ printf("Entero %s\n", yytext); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 7 "analizador_lexico.l"
-{printf("Real %s\n",yytext);}
+#line 13 "analizador_lexico.l"
+{ printf("Real %s\n", yytext); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 8 "analizador_lexico.l"
-{printf("Operador %s\n", yytext);}
+#line 14 "analizador_lexico.l"
+{ printf("Operador %s\n", yytext); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 9 "analizador_lexico.l"
-{printf("Cacarter no esperado");}
+#line 15 "analizador_lexico.l"
+{ printf("Caracter no esperado: %s\n", yytext); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 10 "analizador_lexico.l"
+#line 17 "analizador_lexico.l"
 ECHO;
 	YY_BREAK
-#line 770 "lex.yy.c"
+#line 769 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1063,7 +1063,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 23 )
+			if ( yy_current_state >= 22 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1091,11 +1091,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 23 )
+		if ( yy_current_state >= 22 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 22);
+	yy_is_jam = (yy_current_state == 21);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1771,7 +1771,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 10 "analizador_lexico.l"
+#line 17 "analizador_lexico.l"
 
 
 int main()
