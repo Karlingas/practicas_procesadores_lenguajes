@@ -729,32 +729,32 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 3 "analizador_lexico.l"
-{printf("Esto es un espacio");}
+{}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 4 "analizador_lexico.l"
-{printf("Final");}
+{return 0;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 5 "analizador_lexico.l"
-{printf("Esto es un identificador");}
+{printf("identificador %s\n",yytext);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 6 "analizador_lexico.l"
-{printf("Esto es un numero entero");}
+{printf("Entero %s\n",yytext);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 7 "analizador_lexico.l"
-{printf("Esto es un numero real");}
+{printf("Real %s\n",yytext);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 8 "analizador_lexico.l"
-{printf("Esto es un operador");}
+{printf("Operador %s\n", yytext);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
