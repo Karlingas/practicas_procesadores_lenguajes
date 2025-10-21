@@ -89,29 +89,28 @@ class Analex:
  #
  ############################################################################
  def Analiza(self):
-     def Analiza(self):
-         l = ""
-         ch = self.flujo.siguiente();
-         if ch == " ":
-            #TODO:acciones si hemos encontrado un blanco
-            pass
-         elif ch == "\r":
-            #TODO: acciones si hemos encontrado un salto de linea
-            pass
-         elif True == False:
-            #TODO: completar aqui para todas las categorias lexicas
-            pass
-         elif ch == "\n":
-             ## TODO: acciones al encontrar un salto de linea
-             self.nlinea = self.nlinea + 1
-             return self.Analiza()
-         elif ch:
-             # TODO: se ha encontrado un caracter no permitido
-             print ("ERROR LEXICO  Linea " + str(self.nlinea) + " ::  Caracter " + ch + " invalido ")
-             return self.Analiza()
-         else:
-             # TODO: el final de fichero
-             return componentes.EOF()
+    l = ""
+    ch = self.flujo.siguiente()
+    if ch == " ":
+       #TODO:acciones si hemos encontrado un blanco
+       pass
+    elif ch == "\r":
+       #TODO: acciones si hemos encontrado un salto de linea
+       pass
+    elif ch.isinstance(int):
+       #TODO: completar aqui para todas las categorias lexicas
+       pass
+    elif ch == "\n":
+        ## TODO: acciones al encontrar un salto de linea
+        self.nlinea = self.nlinea + 1
+        return self.Analiza()
+    elif ch:
+        # TODO: se ha encontrado un caracter no permitido
+        print ("ERROR LEXICO  Linea " + str(self.nlinea) + " ::  Caracter " + ch + " invalido ")
+        return self.Analiza()
+    else:
+        # TODO: el final de fichero
+        return componentes.EOF()
 
 ############################################################################
 #
