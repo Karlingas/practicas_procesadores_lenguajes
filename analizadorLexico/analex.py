@@ -97,9 +97,23 @@ class Analex:
     elif ch == "\r":
        #TODO: acciones si hemos encontrado un salto de linea
        pass
-    elif ch.isinstance(int):
-       #TODO: completar aqui para todas las categorias lexicas
-       pass
+    elif ch.isinstance(int): # Número cualquiera
+        ch_next = self.flujo.siguiente()
+        if (ch_next == " "):
+            return self.Analiza()
+        elif (ch_next == "."):
+           ch_next_next = self.flujo.siguiente()
+           if (ch_next_next.isinstance(int)):
+                while(siguiente siga siendo numero):
+                   aceptar
+                   if (espacio):
+                      return self.Analiza()
+        while(siguiente siga siendo numero):
+            aceptar
+            siguiente char
+            if (espacio):
+                return self.Analiza()
+            
     elif ch == "\n":
         ## TODO: acciones al encontrar un salto de linea
         self.nlinea = self.nlinea + 1
