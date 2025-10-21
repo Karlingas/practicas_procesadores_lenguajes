@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import componentes
-import errores
+#import errores k e esto
 import flujo
 import string
 import sys
@@ -39,7 +39,8 @@ class Analex:
  ############################################################################
  def TrataNum(self,flujo, ch):
  
-#Completar
+  #TODO:Completar
+  pass
 
  ############################################################################
  #
@@ -51,7 +52,8 @@ class Analex:
  #
  ############################################################################
  def TrataIdent(self,flujo, ch):
-  #Completar
+    #TODO:Completar
+    pass
  
   ############################################################################
   #
@@ -63,7 +65,8 @@ class Analex:
   #
   ############################################################################
  def TrataComent(self, flujo):
-  #Completar
+    #TODO: Completar
+    pass
 
  ############################################################################
  #
@@ -74,7 +77,8 @@ class Analex:
  #
  ############################################################################
  def EliminaBlancos(self,flujo):
-#Completar
+    #TODO: Completar
+    pass
 
  ############################################################################
  #
@@ -89,21 +93,24 @@ class Analex:
          l = ""
          ch = self.flujo.siguiente();
          if ch == " ":
-         ##acciones si hemos encontrado un blancoi
+            #TODO:acciones si hemos encontrado un blanco
+            pass
          elif ch == "\r":
-         # acciones si hemos encontrado un salto de linea
-         elif
-         # completar aqui para todas las categorias lexicasw
+            #TODO: acciones si hemos encontrado un salto de linea
+            pass
+         elif True == False:
+            #TODO: completar aqui para todas las categorias lexicas
+            pass
          elif ch == "\n":
-             ## acciones al encontrar un salto de linea
+             ## TODO: acciones al encontrar un salto de linea
              self.nlinea = self.nlinea + 1
              return self.Analiza()
          elif ch:
-             # se ha encontrado un caracter no permitido
+             # TODO: se ha encontrado un caracter no permitido
              print ("ERROR LEXICO  Linea " + str(self.nlinea) + " ::  Caracter " + ch + " invalido ")
              return self.Analiza()
          else:
-             # el final de fichero
+             # TODO: el final de fichero
              return componentes.EOF()
 
 ############################################################################
