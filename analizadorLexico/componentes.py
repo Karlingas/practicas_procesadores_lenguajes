@@ -58,6 +58,14 @@ class Numero(Componente):
     super().__init__(n_linea)
     self.valor = numero
 
+class Entero(Numero):
+  def __init__(self, n_linea, numero):
+    super().__init__(n_linea, numero)
+
+class Real(Numero):
+  def __init__(self, n_linea, numero):
+    super().__init__(n_linea, numero)
+
 #clases para representar los identificadores y palabras reservadas
 class Identif(Componente):
   def __init__(self, n_linea, nombre, valor):
