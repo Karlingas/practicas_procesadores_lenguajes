@@ -32,24 +32,25 @@ class Componente:
 #clases para los simbolos de puntuacion y operadores
 
 class OpAsigna (Componente):
+ #TODO: :=
  pass
 
 # Clase que define la categoria OpAdd
 class OpAdd(Componente):
-#debe almacenarse de que operador se trata
+#TODO:debe almacenarse de que operador se trata
 
 # Clase que define la categoria OpMult
 class OpMult(Componente):
-#Debe alnmacenarse que operador es
+#TODO:Debe alnmacenarse que operador es
 
 #clases para representar los numeros.
 #Puede dividirse en 2 para representar los enteros y los reales de forma independiente
 #Si se opta por una sola categoria debe alamcenarse el tipo de los datos ademas del valor
 class Numero (Componente):
-  
+#TODO:
 #clases para representar los identificadores y palabras reservadas
 class Identif (Componente):
-
+#TODO:
 
 #Clase que reprresenta las palabras reservadas.
 #Sera una clase independiente de los identificadores para facilitar el analisis sintactico
@@ -61,5 +62,5 @@ class PR(Componente):
 #Debe alnmacenarse que operador es concretamente
 
 class OpRel (Componente):
-
+#TODO:
 
