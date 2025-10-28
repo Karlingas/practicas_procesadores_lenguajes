@@ -38,13 +38,13 @@ class Flujo:
         Returns:
             str | None | bool:
                 - str: El siguiente carácter del flujo.
-                - None: Si se alcanzó el final del flujo (EOF).
+                - EOF: Si se alcanzó el final del flujo (EOF).
                 - False: Si ya no quedan más caracteres después del EOF.
         """
         if self.indiceFlujo == len(self.flujo):  # Si hemos llegado al final del flujo EOF
             self.contadorCaracter += 1
             self.indiceFlujo += 1
-            caracter = None
+            caracter = "EOF"
         elif self.indiceFlujo > len(self.flujo):  # Si ya hemos devuelto el EOF
             caracter = False
         else:
@@ -86,8 +86,8 @@ class Flujo:
             int: Número de línea (0 si es la primera).
         """
         if self.contadorCaracter <= 0 and self.contadorLinea > 0:
-            return self.contadorLinea - 1
-        return self.contadorLinea
+            return (self.contadorLinea - 1) + 1
+        return self.contadorLinea + 1
 
     def NumCaracter(self):
         """
@@ -166,45 +166,47 @@ class Flujo:
         return f'Ruta={self.ruta}\nFlujo:\n{self.flujo}'
 
     
+def pruebas():
+    # Pruebas ej 1
+    def dondeEstoy(flujo):
+        print("Nº Linea: ",flujo.NumLinea())
+        print("Nº Caracter: ",flujo.NumCaracter())
 
-# Pruebas ej 1
-def dondeEstoy(flujo):
-    print("Nº Linea: ",flujo.NumLinea())
-    print("Nº Caracter: ",flujo.NumCaracter())
+    flujo = Flujo('archivosFlujo/prueba.txt')
+    print(flujo)
 
-flujo = Flujo('archivosFlujo/prueba.txt')
-print(flujo)
+    print(flujo.AvanzarN(12))
+    dondeEstoy(flujo)
 
-print(flujo.AvanzarN(12))
-dondeEstoy(flujo)
+    flujo.DevolverN(3)
+    print("(3 devolver)")
+    dondeEstoy(flujo)
 
-flujo.DevolverN(3)
-print("(3 devolver)")
-dondeEstoy(flujo)
+    print(flujo.NewCar())
+    dondeEstoy(flujo)
 
-print(flujo.NewCar())
-dondeEstoy(flujo)
+    print(flujo.AvanzarN(100))
+    dondeEstoy(flujo)
 
-print(flujo.AvanzarN(100))
-dondeEstoy(flujo)
+    flujo = Flujo('archivosFlujo/biblia_varias_veces.txt')
+    print("\n--La biblia--")
+    print(flujo.NewCar())
+    print(flujo.NewCar())
+    dondeEstoy(flujo)
+    dondeEstoy(flujo)
 
-flujo = Flujo('archivosFlujo/biblia_varias_veces.txt')
-print("\n--La biblia--")
-print(flujo.NewCar())
-print(flujo.NewCar())
-dondeEstoy(flujo)
-dondeEstoy(flujo)
+    flujo = Flujo('archivosFlujo/archivo_vacio.txt')
+    print("\n--Archivo vacio--")
+    dondeEstoy(flujo)
 
-flujo = Flujo('archivosFlujo/archivo_vacio.txt')
-print("\n--Archivo vacio--")
-dondeEstoy(flujo)
+    # Mas caracteres de los que hay en el flujo
+    print(flujo.NewCar())
+    print(flujo.NewCar())
+    print(flujo.NewCar())
 
-# Mas caracteres de los que hay en el flujo
-print(flujo.NewCar())
-print(flujo.NewCar())
-print(flujo.NewCar())
+    dondeEstoy(flujo)
+    # Mas devoluciones que caracteres hay
+    flujo.DevolverN(3)
+    dondeEstoy(flujo)
 
-dondeEstoy(flujo)
-# Mas devoluciones que caracteres hay
-flujo.DevolverN(3)
-dondeEstoy(flujo)
+pruebas()

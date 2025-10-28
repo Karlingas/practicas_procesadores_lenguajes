@@ -8,6 +8,7 @@ import sys
 import os
 from sys import argv
 
+
 class Analex:
 #############################################################################
 ##  Conjunto de palabras reservadas para comprobar si un identificador es PR
@@ -23,9 +24,9 @@ class Analex:
  #
  ############################################################################
  def __init__(self, flujo):
-    self.flujo= flujo
-    self.poserror= 0
-    self.nlinea=1
+   self.flujo= flujo
+   self.poserror= 0
+   self.nlinea=1
 
 
  ############################################################################
@@ -38,9 +39,30 @@ class Analex:
  #
  ############################################################################
  def TrataNum(self,flujo, ch):
- 
-  #TODO:Completar
-  pass
+   number_int_list = []
+   number_int_list.append(ch)
+   next_ch = self.flujo.NewCar()
+
+   while (next_ch.isdigit()):
+      number_int_list.append(next_ch)
+      next_ch = self.flujo.NewCar()
+
+   if (next_ch == "."):
+      number_float_list = []
+      next_ch = self.flujo.NewCar()
+      number_int_list.append(next_ch) # TODO: Si este NO es un número, error, tiene q ser numero SI o SI
+
+      next_ch = self.flujo.NewCar()
+      while (next_ch.isdigit()):
+         number_float_list.append(next_ch)
+         next_ch = self.flujo.NewCar()
+
+      int_str = "".join(number_int_list)
+      float_str = "".join(number_float_list)
+
+      return componentes.Real(self.flujo.NumLinea(),float(f"{int_str}.{float_str}"))
+
+   return componentes.Entero(self.flujo.NumLinea(),int("".join(number_int_list)))
 
  ############################################################################
  #
@@ -52,8 +74,8 @@ class Analex:
  #
  ############################################################################
  def TrataIdent(self,flujo, ch):
-    #TODO:Completar
-    pass
+   #TODO:Completar
+   pass
  
   ############################################################################
   #
@@ -65,8 +87,8 @@ class Analex:
   #
   ############################################################################
  def TrataComent(self, flujo):
-    #TODO: Completar
-    pass
+   #TODO: Completar
+   pass
 
  ############################################################################
  #
@@ -77,8 +99,8 @@ class Analex:
  #
  ############################################################################
  def EliminaBlancos(self,flujo):
-    #TODO: Completar
-    pass
+   #TODO: Completar
+   pass
 
  ############################################################################
  #
@@ -89,42 +111,34 @@ class Analex:
  #
  ############################################################################
  def Analiza(self):
-    l = ""
-    ch = self.flujo.siguiente()
-    if ch == " ":
-       #TODO:acciones si hemos encontrado un blanco
-       pass
-    elif ch == "\r":
-       #TODO: acciones si hemos encontrado un salto de linea
-       pass
-    elif ch.isinstance(int): # Número cualquiera
-        ch_next = self.flujo.siguiente()
-        if (ch_next == " "):
-            return self.Analiza()
-        elif (ch_next == "."):
-           ch_next_next = self.flujo.siguiente()
-           if (ch_next_next.isinstance(int)):
-                while(siguiente siga siendo numero):
-                   aceptar
-                   if (espacio):
-                      return self.Analiza()
-        while(siguiente siga siendo numero):
-            aceptar
-            siguiente char
-            if (espacio):
-                return self.Analiza()
+   l = ""
+   ch = self.flujo.NewCar()
+   if ch:
+      if ch == "EOF": # EOF
+         return False
+      elif ch == " ":
+         #TODO:acciones si hemos encontrado un blanco
+         pass
+
+      elif ch == "\r":
+         #TODO: acciones si hemos encontrado un salto de linea (\r es regresión de carro)
+         pass
+
+      elif ch.isdigit(): # Número cualquiera
+         return self.TrataNum(self.flujo,ch)
             
-    elif ch == "\n":
-        ## TODO: acciones al encontrar un salto de linea
-        self.nlinea = self.nlinea + 1
-        return self.Analiza()
-    elif ch:
-        # TODO: se ha encontrado un caracter no permitido
-        print ("ERROR LEXICO  Linea " + str(self.nlinea) + " ::  Caracter " + ch + " invalido ")
-        return self.Analiza()
-    else:
-        # TODO: el final de fichero
-        return componentes.EOF()
+      elif ch == "\n":
+         ## TODO: acciones al encontrar un salto de linea
+         self.nlinea = self.nlinea + 1
+         return self.Analiza()
+      
+      else:
+         # TODO: se ha encontrado un caracter no permitido
+         print ("ERROR LEXICO  Linea " + str(self.nlinea) + " ::  Caracter " + ch + " invalido ")
+         return self.Analiza()    
+      
+   else:
+      raise Exception("Se leyó más allá del fin de fichero")
 
 ############################################################################
 #
@@ -136,15 +150,18 @@ class Analex:
 ############################################################################
 
 if __name__=="__main__":
-    script, filename=argv
-    txt=open(filename)
-    print ("PROGRAMA FUENTE %r"  % filename)
-    i=0
-    fl = flujo.Flujo(txt)
-    analex=Analex(fl)
-    c = analex.Analiza()
-    while c.cat != "EOF":
-        print (c)
-        c = analex.Analiza()
-    i = i + 1
+   script =argv
+   filename = "/home/calberto/Documents/Uni/7moCuatri/ProcesadoresLenguajes/Practicas/practicas_procesadores_lenguajes/Tests/1"
+   txt=open(filename)
+   print ("PROGRAMA FUENTE %r \n\n"  % filename)
+   i=0
+   fl = flujo.Flujo(filename)
+   analex=Analex(fl)
+   c = analex.Analiza()
+   while c:
+      print (c)
+      c = analex.Analiza()
+      print("\n")
+   i = i + 1
+   print("\n")
 
