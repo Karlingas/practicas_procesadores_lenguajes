@@ -28,6 +28,24 @@ class Analex:
    self.poserror= 0
    self.nlinea=1
 
+ def createNumList(self,first_ch):
+   """Consume dígitos consecutivos del flujo, empezando por `first_ch`.
+
+   Args:
+      first_ch (str): El primer dígito ya consumido.
+
+   Returns:
+      tuple[list[str], str]: (lista_de_dígitos, primer_caracter_no_dígito)
+   """
+   digit_list = []
+   digit_list.append(first_ch)
+   next_ch = self.flujo.NewCar()
+
+   while (next_ch.isdigit()):
+      digit_list.append(next_ch)
+      next_ch = self.flujo.NewCar()
+   
+   return (digit_list,next_ch)
 
  ############################################################################
  #
@@ -38,31 +56,23 @@ class Analex:
  #  Devuelve: El valor numerico de la cadena leida
  #
  ############################################################################
- def TrataNum(self,flujo, ch):
-   number_int_list = []
-   number_int_list.append(ch)
-   next_ch = self.flujo.NewCar()
-
-   while (next_ch.isdigit()):
-      number_int_list.append(next_ch)
-      next_ch = self.flujo.NewCar()
+ def TrataNum(self, ch):
+   (number_int_list,next_ch) = self.createNumList(ch)
 
    if (next_ch == "."):
-      number_float_list = []
       next_ch = self.flujo.NewCar()
-      number_int_list.append(next_ch) # TODO: Si este NO es un número, error, tiene q ser numero SI o SI
-
-      next_ch = self.flujo.NewCar()
-      while (next_ch.isdigit()):
-         number_float_list.append(next_ch)
-         next_ch = self.flujo.NewCar()
+      (number_float_list,_) = self.createNumList(next_ch) # TODO: Si después del . no viene un número, ERROR. Tiene que ser un numero SI o SI
 
       int_str = "".join(number_int_list)
       float_str = "".join(number_float_list)
 
-      return componentes.Real(self.flujo.NumLinea(),float(f"{int_str}.{float_str}"))
+      ret = componentes.Real(self.flujo.NumLinea(),float(f"{int_str}.{float_str}"))
+   else:
+      ret = componentes.Entero(self.flujo.NumLinea(),int("".join(number_int_list)))
 
-   return componentes.Entero(self.flujo.NumLinea(),int("".join(number_int_list)))
+   self.flujo.Devolver()
+
+   return ret
 
  ############################################################################
  #
@@ -125,7 +135,7 @@ class Analex:
          pass
 
       elif ch.isdigit(): # Número cualquiera
-         return self.TrataNum(self.flujo,ch)
+         return self.TrataNum(ch)
             
       elif ch == "\n":
          ## TODO: acciones al encontrar un salto de linea

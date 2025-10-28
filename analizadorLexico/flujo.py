@@ -209,4 +209,4 @@ def pruebas():
     flujo.DevolverN(3)
     dondeEstoy(flujo)
 
-pruebas()
+#pruebas()
