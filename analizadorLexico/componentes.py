@@ -90,3 +90,9 @@ class OpRel(Componente):
     super().__init__(n_linea)
     self.valor = valor
 
+class Comment(Componente):
+  def __init__(self, n_linea, valor):
+    super().__init__(n_linea)
+    self.valor = valor
+
+
