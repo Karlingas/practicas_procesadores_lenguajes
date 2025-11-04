@@ -93,9 +93,6 @@ class Analex:
    else:
       return componentes.Identif(flujo.NumLinea(), ident_str, None)
    
-
-   
- 
   ############################################################################
   #
   #  Funcion: TrataIdent
@@ -138,8 +135,6 @@ class Analex:
  #
  ############################################################################
  def Analiza(self):
-   l = ""
-
    ch = self.flujo.NewCar()
    if ch:
       # Para saber el final de fichero
@@ -269,7 +264,6 @@ if __name__=="__main__":
    while c:
       print (c)
       c = analex.Analiza()
-      #print("\n") # Si quito esto sale igual que el suyo
    i = i + 1
    print("\n")
 
