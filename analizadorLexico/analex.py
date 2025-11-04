@@ -8,7 +8,6 @@ import sys
 import os
 from sys import argv
 
-
 class Analex:
 #############################################################################
 ##  Conjunto de palabras reservadas para comprobar si un identificador es PR
@@ -167,10 +166,6 @@ class Analex:
          self.EliminaBlancos()
          return self.Analiza()
 
-         """ elif ch == "\r":
-            #TODO: acciones si hemos encontrado un salto de linea (\r es regresión de carro)
-            pass """
-
       elif ch == "\n":
          ## TODO: acciones al encontrar un salto de linea
          self.nlinea = self.nlinea + 1
@@ -228,26 +223,24 @@ class Analex:
             return componentes.OpAsigna(self.flujo.NumLinea())
          else:
             self.flujo.Devolver()
-            return "DosPtos" # Cuenta como parte de 7 simbolos, pero tenemos que detectarlo para la asignacion
+            return componentes.DosPtos(self.flujo.NumLinea()) # Cuenta como parte de 7 simbolos, pero tenemos que detectarlo para la asignacion
       
          
       # 7 simbolos 
       elif ch == ";":
-         return "PtoComa"
+         return componentes.PtoComa(self.flujo.NumLinea()) 
 
       elif ch == ",":
-         return "Coma"
+         return componentes.Coma(self.flujo.NumLinea()) 
 
       elif ch == ".":
-         return "Punto"
+         return componentes.Punto(self.flujo.NumLinea()) 
       
       elif ch == "(":
-         return "ParentAp"
+         return componentes.ParentesisApertura(self.flujo.NumLinea())
       
       elif ch == ")":
-         return "ParentCi"
-      
-
+         return componentes.ParentesisCierre(self.flujo.NumLinea())
 
       else:
          # TODO: se ha encontrado un caracter no permitido
@@ -267,13 +260,13 @@ class Analex:
 ############################################################################
 
 if __name__=="__main__":
-   script =argv
    # Ruta Diego
-   filename = "/Users/diego/dev/practicas_procesadores_lenguajes/analizadorLexico/Prueba1.eje"
+   #filename = "/Users/diego/dev/practicas_procesadores_lenguajes/analizadorLexico/Prueba1.eje"
 
    # Ruta Alberto
    #filename = "/home/calberto/Documents/Uni/7moCuatri/ProcesadoresLenguajes/Practicas/practicas_procesadores_lenguajes/Tests/1"
 
+   filename = argv[1]
 
    txt=open(filename)
    print ("PROGRAMA FUENTE %r \n\n"  % filename)

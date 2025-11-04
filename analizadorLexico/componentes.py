@@ -95,4 +95,27 @@ class Comment(Componente):
     super().__init__(n_linea)
     self.valor = valor
 
+# Símbolos
+class DosPtos(Componente):
+  def __init__(self, n_linea):
+    super().__init__(n_linea)
 
+class Punto(Componente):
+  def __init__(self, n_linea):
+    super().__init__(n_linea)
+
+class PtoComa(Componente):
+  def __init__(self, n_linea):
+    super().__init__(n_linea)
+
+class Coma(Componente):
+  def __init__(self, n_linea):
+    super().__init__(n_linea)
+
+class ParentesisApertura(Componente):
+  def __init__(self, n_linea):
+    super().__init__(n_linea)
+
+class ParentesisCierre(Componente):
+  def __init__(self, n_linea):
+    super().__init__(n_linea)
