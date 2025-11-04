@@ -4,8 +4,6 @@ import componentes
 #import errores k e esto
 import flujo
 import string
-import sys
-import os
 from sys import argv
 
 class Analex:
@@ -50,8 +48,7 @@ class Analex:
  #
  #  Funcion: TrataNum
  #  Tarea:  Lee un numero del flujo
- #  Prametros:  flujo:  flujo de caracteres de entrada
- #              ch: primera caractera tratar
+ #  Prametros: ch: primera caractera tratar
  #  Devuelve: El valor numerico de la cadena leida
  #
  ############################################################################
@@ -60,7 +57,7 @@ class Analex:
 
    if (next_ch == "."):
       next_ch = self.flujo.NewCar()
-      (number_float_list,_) = self.createNumList(next_ch) # TODO: Si después del . no viene un número, ERROR. Tiene que ser un numero SI o SI
+      (number_float_list,_) = self.createNumList(next_ch)
 
       int_str = "".join(number_int_list)
       float_str = "".join(number_float_list)
@@ -77,8 +74,7 @@ class Analex:
  #
  #  Funcion: TrataIdent
  #  Tarea:  Lee identificadores
- #  Prametros:  flujo:  flujo de caracteres de entrada
- #              ch: Primer caracter a tratar
+ #  Parametros: ch: Primer caracter a tratar
  #  Devuelve: Devuelve una cadena de caracteres que representa un identificador
  #
  ############################################################################
@@ -104,8 +100,7 @@ class Analex:
   #
   #  Funcion: TrataIdent
   #  Tarea:  Lee identificadores
-  #  Prametros:  TODO CREO QUE NO HACE FALTA --> flujo:  flujo de caracteres de entrada
-  #              ch: Primer caracter a tratar
+  #  Prametros:  ch: Primer caracter a tratar
   #  Devuelve: Devuelve una cadena de caracteres que representa un identificador
   #
   ############################################################################
@@ -122,7 +117,7 @@ class Analex:
  #
  #  Funcion: EliminaBlancos
  #  Tarea:  Descarta todos los caracteres blancos que hay en el flujo de entrada
- #  Prametros:  TODO CREO QUE NO HACE FALTA --> flujo:  flujo de caracteres de entrada
+ #  Parametros: -
  #  Devuelve: --
  #
  ############################################################################
@@ -138,7 +133,7 @@ class Analex:
  #
  #  Funcion: Analiza
  #  Tarea:  Identifica los diferentes componentes lexicos
- #  Prametros:  --
+ #  Parametros:  --
  #  Devuelve: Devuelve un componente lexico
  #
  ############################################################################
@@ -167,7 +162,7 @@ class Analex:
          return self.Analiza()
 
       elif ch == "\n":
-         ## TODO: acciones al encontrar un salto de linea
+         ## acciones al encontrar un salto de linea
          self.nlinea = self.nlinea + 1
          return self.Analiza()
       
@@ -223,8 +218,7 @@ class Analex:
             return componentes.OpAsigna(self.flujo.NumLinea())
          else:
             self.flujo.Devolver()
-            return componentes.DosPtos(self.flujo.NumLinea()) # Cuenta como parte de 7 simbolos, pero tenemos que detectarlo para la asignacion
-      
+            return componentes.DosPtos(self.flujo.NumLinea()) # Cuenta como parte de 7 simbolos, pero tenemos que detectarlo para la asignacion 
          
       # 7 simbolos 
       elif ch == ";":
@@ -243,7 +237,7 @@ class Analex:
          return componentes.ParentesisCierre(self.flujo.NumLinea())
 
       else:
-         # TODO: se ha encontrado un caracter no permitido
+         # Se ha encontrado un caracter no permitido
          print ("ERROR LEXICO  Linea " + str(self.nlinea) + " ::  Caracter " + ch + " invalido ")
          return self.Analiza()    
       
@@ -254,21 +248,19 @@ class Analex:
 #
 #  Funcion: __main__
 #  Tarea:  Programa principal de prueba del analizador lexico
-#  Prametros:  --
+#  Parametros:  --
 #  Devuelve: --
 #
 ############################################################################
 
 if __name__=="__main__":
-   # Ruta Diego
-   #filename = "/Users/diego/dev/practicas_procesadores_lenguajes/analizadorLexico/Prueba1.eje"
-
-   # Ruta Alberto
-   #filename = "/home/calberto/Documents/Uni/7moCuatri/ProcesadoresLenguajes/Practicas/practicas_procesadores_lenguajes/Tests/1"
-
+   if len(argv) < 2:
+      print("\nUso: analex.py <Ruta al archivo>\n")
+      exit(1)
+   
    filename = argv[1]
-
    txt=open(filename)
+
    print ("PROGRAMA FUENTE %r \n\n"  % filename)
    i=0
    fl = flujo.Flujo(filename)
