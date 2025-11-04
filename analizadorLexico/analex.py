@@ -148,44 +148,105 @@ class Analex:
 
    ch = self.flujo.NewCar()
    if ch:
+      # Para saber el final de fichero
       if ch == "EOF": # EOF
          return False
       
-      elif ch == " ":
+      # 1 Los comentarios
+      elif ch == "%":
+         next_ch = self.flujo.NewCar()
+
+         if next_ch == "%":
+            return self.TrataComent()
+         else:
+            self.flujo.Devolver()
+            return componentes.Identif(self.flujo.NumLinea(), "%", None)
+         
+      # 2 Los espacios en blanco, tabulaciones y saltos de linea   
+      elif ch == " " or ch == "\t" or ch == "\r":
          self.EliminaBlancos()
          return self.Analiza()
 
-      elif ch == "\r":
-         #TODO: acciones si hemos encontrado un salto de linea (\r es regresión de carro)
-         pass
+         """ elif ch == "\r":
+            #TODO: acciones si hemos encontrado un salto de linea (\r es regresión de carro)
+            pass """
 
       elif ch == "\n":
          ## TODO: acciones al encontrar un salto de linea
          self.nlinea = self.nlinea + 1
          return self.Analiza()
       
-      elif ch.isdigit(): # Número cualquiera
-         return self.TrataNum(ch)      
-      
+      # 3 y 5 Identificadores que, ya que detecta lo que es texto, aprovechamos y detectamos palabras reservadas
       elif ch in string.ascii_letters: # Identificador o palabra reservada
          return self.TrataIdent(self.flujo, ch)
+      
+      # 4 Numeros enteros y reales
+      elif ch.isdigit(): # Número cualquiera
+         return self.TrataNum(ch)
+      
+      # 6 Operadores
 
+      # Relacionales
+      elif ch == "<":
+         next_ch = self.flujo.NewCar()
+         if next_ch == "=":
+            return componentes.OpRel(self.flujo.NumLinea(), "<=")
+         elif next_ch == ">":
+            return componentes.OpRel(self.flujo.NumLinea(), "<>")
+         else:
+            self.flujo.Devolver()
+            return componentes.OpRel(self.flujo.NumLinea(), "<")
+      
+      elif ch == ">":
+         next_ch = self.flujo.NewCar()
+         if next_ch == "=":
+            return componentes.OpRel(self.flujo.NumLinea(), ">=")
+         else:
+            return componentes.OpRel(self.flujo.NumLinea(), ">")
+      
+      elif ch == "=":
+         return componentes.OpRel(self.flujo.NumLinea(), "=")
+      
+
+      # Aritmeticos
+      elif ch == "+":
+         return componentes.OpAdd(self.flujo.NumLinea(), "+")
+      
+      elif ch == "-":
+         return componentes.OpAdd(self.flujo.NumLinea(), "-")
+      
+      elif ch == "*":
+         return componentes.OpMult(self.flujo.NumLinea(), "*")
+      
+      elif ch == "/":
+         return componentes.OpMult(self.flujo.NumLinea(), "/")
+      
+      # Asignacion
       elif ch == ":": 
          next_ch = self.flujo.NewCar()
          if next_ch == "=":
             return componentes.OpAsigna(self.flujo.NumLinea())
          else:
             self.flujo.Devolver()
-            return componentes.Identif(self.flujo.NumLinea(), ":", None)
+            return "DosPtos" # Cuenta como parte de 7 simbolos, pero tenemos que detectarlo para la asignacion
       
-      elif ch == "%":
-         next_ch = self.flujo.NewCar()
-         if next_ch == "%":
-            return self.TrataComent()
+         
+      # 7 simbolos 
+      elif ch == ";":
+         return "PtoComa"
 
-         else:
-            self.flujo.Devolver()
-            return componentes.Identif(self.flujo.NumLinea(), "%", None)
+      elif ch == ",":
+         return "Coma"
+
+      elif ch == ".":
+         return "Punto"
+      
+      elif ch == "(":
+         return "ParentAp"
+      
+      elif ch == ")":
+         return "ParentCi"
+      
 
 
       else:
@@ -208,7 +269,7 @@ class Analex:
 if __name__=="__main__":
    script =argv
    # Ruta Diego
-   filename = "/Users/diego/dev/practicas_procesadores_lenguajes/Tests/1"
+   filename = "/Users/diego/dev/practicas_procesadores_lenguajes/analizadorLexico/Prueba1.eje"
 
    # Ruta Alberto
    #filename = "/home/calberto/Documents/Uni/7moCuatri/ProcesadoresLenguajes/Practicas/practicas_procesadores_lenguajes/Tests/1"
@@ -223,7 +284,7 @@ if __name__=="__main__":
    while c:
       print (c)
       c = analex.Analiza()
-      print("\n")
+      #print("\n") # Si quito esto sale igual que el suyo
    i = i + 1
    print("\n")
 
