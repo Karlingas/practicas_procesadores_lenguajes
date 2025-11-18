@@ -2,9 +2,9 @@
 
 ''' Para esto se tiene en cuenta que la información que se almacena para cada tipo de variable es (sujeto a cambios):
 
-        Variables escalar: tipo (String), dirección (Int), tamaño (Int) y valor (Int/Double/String)
-        variables vectoriales: tipo base (String), dirección inicial (Int), tamaño de las dimensiones (Int)
-        funciones: número de argumentos (Int), tupla con los tipos de argumentos de entrada (tupla de Strings) y tupla con los tipos de argumentos devueltos (tupla de Strings)  
+        Variables escalar: Identificador (String), Tipo (String), Naturaleza (String), valor (Int/Double/String)
+
+        No harian falta otros tipos, ya que en nuestro lenguaje no va ni a haber vectores ni llamadas a funciones.
 '''
 
 noID = Exception("Id no encontrado en la tabla de simbolos")
@@ -30,36 +30,36 @@ class tablaSimbolos():
         """
         return {}
 
-    def Existe(self, id):
+    def Existe(self, identificador):
         """
         Verifica si un identificador existe en la tabla.
 
         Args:
-            id (str): Identificador a buscar.
+            identificador (str): Identificador a buscar.
 
         Returns:
-            bool: True si el identificador está en la tabla, False en caso contrario.
+            bool: 'True' si el identificador está en la tabla, 'False' en caso contrario.
         """
-        if id in self.tabla:
+        if identificador in self.tabla:
             return True
         return False
 
-    def Valor(self, id):
+    def Valor(self, identificador):
         """
         Obtiene los atributos asociados a un identificador.
 
         Args:
-            id (str): Identificador a consultar.
+            identificador (str): .
 
         Returns:
-            tuple: Atributos del identificador.
+            tupla: Valor asociado al identificador.
 
         Raises:
             Exception: Si el identificador no existe en la tabla.
         """
-        if id not in self.tabla:
+        if identificador not in self.tabla:
             raise noID
-        return self.tabla[id]
+        return self.tabla[id][2]
 
     def __str__(self):
         """
@@ -70,182 +70,94 @@ class tablaSimbolos():
         """
         return str(self.tabla)
 
-    # Versiones genéricas
-
-    def Insertar(self, id, valor):
-        """
-        Inserta un identificador con sus atributos genéricos.
-
-        Args:
-            id (str): Identificador.
-            valor (tuple): Atributos asociados.
-        """
-        self.tabla[id] = valor
-
-    def Modificar(self, id, valor):     
-        """
-        Modifica los atributos de un identificador existente.
-
-        Args:
-            id (str): Identificador.
-            valor (tuple): Nuevos atributos.
-
-        Raises:
-            Exception: Si el identificador no existe.
-        """
-        if id not in self.tabla:
-            raise noID
-        self.tabla[id] = valor
-
     # Versiones específicas para escalares
 
-    def InsertarEscalar(self, id, tipo, direccion, tamaño, valor):
+    def Insertar(self, identificador, tipo, naturaleza, valor):
         """
         Inserta una variable escalar con sus atributos.
 
         Args:
-            id (str): Nombre del identificador.
+            identificador (str): Nombre del identificador.
             tipo (str): Tipo de dato.
             direccion (int): Dirección de memoria.
             tamaño (int): Tamaño del dato.
             valor (int | float | str): Valor de la variable.
         """
-        atributos = (tipo, direccion, tamaño, valor)
-        self.tabla[id] = atributos
+        atributos = (tipo, naturaleza, valor)
+        self.tabla[identificador] = atributos
 
-    def ModificarEscalar(self, id, tipo=0, direccion=0, tamaño=0, valor=0):
-        """
-        Modifica una variable escalar manteniendo los valores anteriores si no se proporcionan nuevos.
+    def ModificarTipo(self, identificador, tipoNuevo):
+        '''
+        Modifica el tipo de la variable asociada al identificador.
 
         Args:
-            id (str): Identificador.
-            tipo (str, optional): Nuevo tipo de dato.
-            direccion (int, optional): Nueva dirección de memoria.
-            tamaño (int, optional): Nuevo tamaño.
-            valor (int | float | str, optional): Nuevo valor.
+            identificador (str): id de la variable cuyo tipo se quiere cambiar
+            tipoNuevo (str): Tipo nuevo que tendrá la variable
 
         Raises:
-            Exception: Si el identificador no existe.
-        """
-        if id not in self.tabla:
+            Exception: Si el identificador no existe.        
+        '''
+
+        if identificador not in self.tabla:
             raise noID
+        
+        self.tabla[identificador][0]=tipoNuevo
 
-        if tipo == 0:
-            tipo = self.tabla[id][0]
-        if direccion == 0:
-            direccion = self.tabla[id][1]
-        if tamaño == 0:
-            tamaño = self.tabla[id][2]
-        if valor == 0:
-            valor = self.tabla[id][3]
 
-        self.tabla[id] = (tipo, direccion, tamaño, valor)
-
-    # Versiones específicas para vectoriales
-
-    def InsertarVectorial(self, id, tipoBase, dirInicial, tamDimen):
-        """
-        Inserta una variable vectorial con sus atributos.
+    def ModificarNaturaleza(self, identificador, naturalezaNueva):
+        '''
+        Modifica la naturaleza de la variable asociada al identificador.
 
         Args:
-            id (str): Identificador.
-            tipoBase (str): Tipo base del vector.
-            dirInicial (int): Dirección inicial en memoria.
-            tamDimen (int): Tamaño de las dimensiones.
-        """
-        atributos = (tipoBase, dirInicial, tamDimen)
-        self.tabla[id] = atributos
-
-    def ModificarVectorial(self, id, tipoBase=0, dirInicial=0, tamDimen=0):
-        """
-        Modifica una variable vectorial manteniendo los valores anteriores si no se proporcionan nuevos.
-
-        Args:
-            id (str): Identificador.
-            tipoBase (str, optional): Nuevo tipo base.
-            dirInicial (int, optional): Nueva dirección inicial.
-            tamDimen (int, optional): Nuevo tamaño de dimensiones.
+            identificador (str): id de la variable cuyo tipo se quiere cambiar
+            naturalezaNueva (str): Naturaleza    nueva que tendrá la variable
 
         Raises:
-            Exception: Si el identificador no existe.
-        """
-        if id not in self.tabla:
+            Exception: Si el identificador no existe.        
+        '''
+
+        if identificador not in self.tabla:
             raise noID
+        
+        self.tabla[identificador][1]=naturalezaNueva
 
-        if tipoBase == 0:
-            tipoBase = self.tabla[id][0]
-        if dirInicial == 0:
-            dirInicial = self.tabla[id][1]
-        if tamDimen == 0:
-            tamDimen = self.tabla[id][2]
 
-        self.tabla[id] = (tipoBase, dirInicial, tamDimen)
-
-    # Versiones específicas para funciones
-
-    def InsertarFuncion(self, id, numArg, argEntrada, argSalida):
-        """
-        Inserta una función con su información de firma.
+    def ModificarValor(self, identificador, valorNuevo):
+        '''
+        Modifica el valor de la variable asociada al identificador.
 
         Args:
-            id (str): Identificador de la función.
-            numArg (int): Número de argumentos.
-            argEntrada (tuple): Tipos de argumentos de entrada.
-            argSalida (tuple): Tipos de argumentos de salida.
-        """
-        atributos = (numArg, argEntrada, argSalida)
-        self.tabla[id] = atributos    
-
-    def ModificarFuncion(self, id, numArg=0, argEntrada=0, argSalida=0):
-        """
-        Modifica los atributos de una función, manteniendo los valores anteriores si no se proporcionan nuevos.
-
-        Args:
-            id (str): Identificador de la función.
-            numArg (int, optional): Nuevo número de argumentos.
-            argEntrada (tuple, optional): Nuevos tipos de entrada.
-            argSalida (tuple, optional): Nuevos tipos de salida.
+            identificador (str): id de la variable cuyo tipo se quiere cambiar
+            valorNuevo (str): Valor nuevo que tendrá la variable
 
         Raises:
-            Exception: Si el identificador no existe.
-        """
-        if id not in self.tabla:
+            Exception: Si el identificador no existe.        
+        '''
+
+        if identificador not in self.tabla:
             raise noID
+        
+        self.tabla[identificador][0]=valorNuevo
 
-        if numArg == 0:
-            numArg = self.tabla[id][0]
-        if argEntrada == 0:
-            argEntrada = self.tabla[id][1]
-        if argSalida == 0:
-            argSalida = self.tabla[id][2]
+    # Modifica todo de una
+    def ModificarGeneral(self, identificador, tipoNuevo, naturalezaNueva, valorNuevo):
+        '''
+        Modifica todos los datos de la variable asociada al identificador.
 
-        self.tabla[id] = (numArg, argEntrada, argSalida)
+        Args:
+            identificador (str): id de la variable cuyo tipo se quiere cambiar
+            tipoNuevo (str): Tipo nuevo que tendrá la variable
+            naturalezaNueva (str): Naturaleza    nueva que tendrá la variable
+            valorNuevo (str): Valor nuevo que tendrá la variable
 
+        Raises:
+            Exception: Si el identificador no existe.        
+        '''
 
-    
-# Ejercicio 2 de Practica 1
+        if identificador not in self.tabla:
+            raise noID
+        
+        entrada=[tipoNuevo, naturalezaNueva, valorNuevo]
 
+        self.tabla[identificador]=entrada
 
-tabla = tablaSimbolos()
-tabla.Insertar("x", ("Entero", 10,10000))
-tabla.Insertar("y", ("Cadena", "Hola Mundo",10100))
-print(tabla)
-
-tabla.Insertar("z", ("Booleano", True,10200))
-tabla.Modificar("x", ("Real", 3.14,10000))
-print(tabla)
-
-print(tabla.Existe("x"))
-print(tabla.Existe("a"))
-print(tabla.Valor("y"))
-    
-    
-tabla.InsertarEscalar("entero_1","Entero", 10300,64,10)
-tabla.InsertarVectorial("vector_2","Double",10400,64)
-tabla.InsertarFuncion("funcion_3",3,("Entero,String,Double"),"Entero")
-print(tabla)
-
-tabla.ModificarEscalar("entero_1","Double",2,3,4)
-tabla.ModificarVectorial("vector_2","String",333,1)
-tabla.ModificarFuncion("funcion_3",4,("Entero", "String","Boolean","Double"),("String","Boolean"))
-print(tabla)
