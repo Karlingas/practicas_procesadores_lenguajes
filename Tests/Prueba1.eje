@@ -1,5 +1,5 @@
 PROGRAMA p1;
-VAR i,x:INTEGER;
+VAR (i,x:ENTERO;)
 INICIO
   i:=0.0;
    MIENTRAS (i<>5) HACER
@@ -8,9 +8,3 @@ INICIO
       ESCRIBE(x);
     FIN;
 FIN.
-
-LLo987.76
-876.98uyt
-)
-&
-.
