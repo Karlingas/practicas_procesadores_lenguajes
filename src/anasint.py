@@ -7,14 +7,34 @@ import flujo
 import analex
 import sys
 from sys import argv
-
+""" dict_siguientes = {
+    "Programa": ["EOF"],
+    "decl_var": ["INICIO"],
+    "decl_v": [")"],
+    "lista_id": [":"],
+    "resto_listaid": [":"],
+    "Tipo_std": [";"],
+    "instrucciones": [".", "SINO", ";"],
+    "instrucción": [";"],
+    "Inst_simple": [";"],
+    "inst_e/s": [";"],
+    "expresión": ["ENTONCES", "HACER", ")", ";"],
+    "expresión’": ["ENTONCES", "HACER", ")", ";"],
+    "expr_simple": [")", "oprel", "ENTONCES", "HACER", ";"],
+    "expr_simple’": [")", "oprel", "ENTONCES", "HACER"],
+    "término": ["opsuma", "O", ")", "oprel", "ENTONCES", "HACER"],
+    "resto_term": ["opsuma", "O", ")", "oprel", "ENTONCES", "HACER"],
+    "factor": ["opmult", "Y", "opsuma", "O", ")", "oprel", "ENTONCES", "HACER"]
+} """
 
 class Sintactico:
+
 #Constructor de la clase que implementa el Analizador Sintactico
 #Solicita el primer componente lexico 
     def __init__(self, lexico):
         self.lexico= lexico
         self.token=self.lexico.Analiza()
+        self.lista_errores = []
 
     def Avanza(self):
         self.token = self.lexico.Analiza()
@@ -61,12 +81,14 @@ class Sintactico:
         
         print(f"Linea: {linea} ERROR: {error_msg}")
 
+        self.lista_errores.add((nerr,linea,error_msg))
+
 
     # <Programa> → PROGRAMA id ; <decl_var> <instrucciones> .
     def AnalizaPrograma(self):
         if self.token.cat != "PR" or self.token.valor != "PROGRAMA":
             self.Error(1)
-            return False
+            return False 
         self.Avanza()
 
         if self.token.cat != "Identif":
@@ -378,7 +400,7 @@ class Sintactico:
 ####################################################
 if __name__=="__main__":
     if len(argv) < 2:
-      print("\nUso: analex.py <Ruta al archivo>\n")
+      print("\nUso: anasint.py <Ruta al archivo>\n")
       exit(1)
    
     filename = argv[1]
