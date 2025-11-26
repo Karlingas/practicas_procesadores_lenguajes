@@ -4,7 +4,7 @@ INICIO
   i:=0.0;
    MIENTRAS (i<>5) HACER
     INICIO 
-      x:=i*4;
+      x:=i*4+4+5;
       ESCRIBE(x);
     FIN;
 FIN.
