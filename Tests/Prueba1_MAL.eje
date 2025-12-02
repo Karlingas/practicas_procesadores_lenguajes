@@ -1,10 +1,12 @@
 PROGRAMA p1;
-VAR (i,x ENTERO;)
+VAR i,x:ENTERO;
+i,x:REAL;
+a ;
 INICIO
   i:=0.0;
    MIENTRAS (i<>5) HACER
     INICIO 
-      x:=i*4;
-      ESCRIBE )x);
+      x:=i*4+4+5;
+      ESCRIBE(x);
     FIN;
 FIN.

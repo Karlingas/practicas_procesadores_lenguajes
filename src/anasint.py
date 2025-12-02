@@ -54,10 +54,11 @@ class Sintactico:
             # Todo perfecto
             self.Avanza()
             return True
-        
         self.Error(nerr)
-
+        print(self.lista_errores)
         if self.Token_en_set(sync_set):    # Si esta en los siguientes esperados 
+            if self.token.cat == "Identif":
+                self.Avanza()
             return True                     # Asumimos que el token faltaba y continuamos
 
         # Recuperación, consumimos tokens no válidos
@@ -93,32 +94,28 @@ class Sintactico:
     def AnalizaDeclVar(self, sync_set):
         if self.token.cat == "PR" and self.token.valor == "VAR":
             self.Avanza()
-            self.Emparejar("ParentesisApertura", None, 6, ["Identif"])
             
             self.AnalizaListaId(sync_set=["DosPtos"])
-            self.Emparejar("DosPtos", None, 7, ["ENTERO", "REAL", "BOOLEANO"])
+            self.Emparejar("DosPtos", None, 7, ["ENTERO", "REAL", "BOOLEANO", "PtoComa"])
             self.AnalizaTipoStd()
-            self.Emparejar("PtoComa", None, 3, ["ParentesisApertura", "ParentesisCierre"])
+            self.Emparejar("PtoComa", None, 3, ["Identif"] + sync_set)
             
             # Recursividad para las declaraciones adicionales
-            self.AnalizaDeclV(sync_set=["ParentesisCierre"]) 
-            
-            self.Emparejar("ParentesisCierre", None, 9, sync_set)
+            self.AnalizaDeclV(sync_set) 
         else:
             # λ (Lambda), Si no es VAR no hacemos nada (siempre que venga algo válido después)
             if not self.Token_en_set(sync_set):
                 # Si lo que viene no es INICIO, entonces sí es un error
                 self.Error(5)
 
-    # <decl_v> → ( <lista_id> : <tipo_std> ; )* -> Recursivo
+    # <decl_v> → <lista_id> : <tipo_std> ; <decl_v> | λ -> Recursivo
     def AnalizaDeclV(self, sync_set):
-        if self.token.cat == "ParentesisApertura":
+        if self.token.cat == "Identif":
             # Parte repetitiva
-            self.Avanza() # Consumir (
             self.AnalizaListaId(sync_set=["DosPtos"])
-            self.Emparejar("DosPtos", None, 7, ["ENTERO", "REAL", "BOOLEANO"])
+            self.Emparejar("DosPtos", None, 7, ["ENTERO", "REAL", "BOOLEANO", "PtoComa"])
             self.AnalizaTipoStd()
-            self.Emparejar("PtoComa", None, 3, ["ParentesisApertura", "ParentesisCierre"])
+            self.Emparejar("PtoComa", None, 3, ["Identif"] + sync_set)
             
             self.AnalizaDeclV(sync_set) 
         else:
