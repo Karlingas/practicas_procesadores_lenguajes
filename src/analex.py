@@ -85,7 +85,7 @@ class Analex:
    ident_str = ch
    next_ch = flujo.NewCar()
     
-   while (next_ch.isalnum()):
+   while (next_ch and next_ch.isalnum() and next_ch != "EOF"):
       ident_str += next_ch
       next_ch = flujo.NewCar()
    
@@ -142,7 +142,7 @@ class Analex:
    if ch:
       # Para saber el final de fichero
       if ch == "EOF": # EOF
-         return False
+         return componentes.EOF(self.flujo.NumLinea())
       
       # 1 Los comentarios
       elif ch == "%":
@@ -264,7 +264,7 @@ if __name__=="__main__":
    fl = flujo.Flujo(filename)
    analex=Analex(fl)
    c = analex.Analiza()
-   while c:
+   while c.cat!="EOF":
       print (c)
       c = analex.Analiza()
    i = i + 1

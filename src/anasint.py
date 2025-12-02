@@ -55,10 +55,10 @@ class Sintactico:
             self.Avanza()
             return True
         self.Error(nerr)
-        print(self.lista_errores)
+
         if self.Token_en_set(sync_set):    # Si esta en los siguientes esperados 
-            if self.token.cat == "Identif":
-                self.Avanza()
+            """ if self.token.cat == "Identif":
+                self.Avanza() """
             return True                     # Asumimos que el token faltaba y continuamos
 
         # Recuperación, consumimos tokens no válidos
@@ -81,9 +81,12 @@ class Sintactico:
 
     # <Programa> → PROGRAMA id ; <decl_var> <instrucciones> .
     def AnalizaPrograma(self):
-        self.Emparejar("PR", "PROGRAMA", 1, ["Identif", "PtoComa", "VAR", "INICIO"])
-        self.Emparejar("Identif", None, 2, ["PtoComa", "VAR", "INICIO"])
-        self.Emparejar("PtoComa", None, 3, ["VAR", "INICIO"])
+        if not self.Emparejar("PR", "PROGRAMA", 1, ["Identif", "PtoComa", "VAR", "INICIO"]):
+            return
+        if not self.Emparejar("Identif", None, 2, ["PtoComa", "VAR", "INICIO"]):
+            return
+        if not self.Emparejar("PtoComa", None, 3, ["VAR", "INICIO"]):
+            return
 
         self.AnalizaDeclVar(sync_set=["INICIO"]) # Pasamos quien sigue después
         self.AnalizaInstrucciones(sync_set=["Punto"])
@@ -149,12 +152,14 @@ class Sintactico:
     def AnalizaInstrucciones(self, sync_set):
         primeros_inst = ["Identif", "LEE", "ESCRIBE", "SI", "MIENTRAS"]
         
-        self.Emparejar("PR", "INICIO", 10, primeros_inst + ["FIN"])
+        if not self.Emparejar("PR", "INICIO", 10, primeros_inst + ["FIN"]):
+            return
         
         # cadena recursiva de instrucciones
         self.AnalizaBloqueInstrucciones(sync_set=["FIN"] + primeros_inst)
         
-        self.Emparejar("PR", "FIN", 11, sync_set)
+        if not self.Emparejar("PR", "FIN", 11, sync_set):
+            return 
 
     # Función auxiliar recursiva para ( <instrucción> ; )*
     def AnalizaBloqueInstrucciones(self, sync_set):
@@ -163,7 +168,8 @@ class Sintactico:
         # Si el token actual puede empezar una instrucción
         if self.Token_en_set(primeros_inst):
             self.AnalizaInstruccion(sync_set)
-            self.Emparejar("PtoComa", None, 3, primeros_inst + ["FIN"])
+            if not self.Emparejar("PtoComa", None, 3, primeros_inst + ["FIN"]):
+                return 
             
             # RECURSION para ver si hay otra instrucción
             self.AnalizaBloqueInstrucciones(sync_set)
@@ -184,7 +190,8 @@ class Sintactico:
             elif v == "SI":
                 self.Avanza()
                 self.AnalizaExpresion(siguiente_sync + ["ENTONCES"])
-                self.Emparejar("PR", "ENTONCES", 14, ["INICIO"])
+                if not self.Emparejar("PR", "ENTONCES", 14, ["INICIO"]):
+                    return 
                 self.AnalizaInstrucciones(siguiente_sync + ["SINO"])
                 if self.token.cat == "PR" and self.token.valor == "SINO":
                     self.Avanza()
@@ -192,7 +199,8 @@ class Sintactico:
             elif v == "MIENTRAS":
                 self.Avanza()
                 self.AnalizaExpresion(siguiente_sync + ["HACER"])
-                self.Emparejar("PR", "HACER", 15, ["INICIO"])
+                if not self.Emparejar("PR", "HACER", 15, ["INICIO"]):
+                    return 
                 self.AnalizaInstrucciones(siguiente_sync)
             else:
                 self.Error(12)
@@ -202,19 +210,23 @@ class Sintactico:
     # <Inst_simple> → id opasigna <expresión>
     def AnalizaInstSimple(self, sync_set):
         self.Avanza() # Id
-        self.Emparejar("OpAsigna", None, 13, ["Identif", "Numero", "ParentesisApertura", "NO"]) 
+        if not self.Emparejar("OpAsigna", None, 13, ["Identif", "Numero", "ParentesisApertura", "NO"]):
+            return 
         self.AnalizaExpresion(sync_set)
 
     # <inst_e/s>
     def AnalizaInstES(self, sync_set):
         tipo = self.token.valor 
         self.Avanza()
-        self.Emparejar("ParentesisApertura", None, 6, ["Identif", "Numero"])
+        if not self.Emparejar("ParentesisApertura", None, 6, ["Identif", "Numero"]):
+            return 
         if tipo == "LEE":
-            self.Emparejar("Identif", None, 2, ["ParentesisCierre"])
+            if not self.Emparejar("Identif", None, 2, ["ParentesisCierre"]):
+                return 
         else:
             self.AnalizaExprSimple(sync_set + ["ParentesisCierre"]) 
-        self.Emparejar("ParentesisCierre", None, 9, sync_set)
+        if not self.Emparejar("ParentesisCierre", None, 9, sync_set):
+            return 
 
     # <expresion> → <expr_simple> <expresion’>
     def AnalizaExpresion(self, sync_set):
@@ -270,7 +282,8 @@ class Sintactico:
         elif self.token.cat == "ParentesisApertura":
             self.Avanza()
             self.AnalizaExpresion(["ParentesisCierre"])
-            self.Emparejar("ParentesisCierre", None, 9, sync_set)
+            if not self.Emparejar("ParentesisCierre", None, 9, sync_set):
+                return 
         else:
             self.Error(17) # Se esperaba factor
             # Sincronización si falló el factor
@@ -284,11 +297,12 @@ class Sintactico:
 ## Programa principal que lanza el analizador sintactico
 ####################################################
 if __name__=="__main__":
-    if len(argv) < 2:
+    """ if len(argv) < 2:
       print("\nUso: anasint.py <Ruta al archivo>\n")
       exit(1)
    
-    filename = argv[1]
+    filename = argv[1] """
+    filename = "./Tests/Prueba1_MAL.eje"
     print ("PROGRAMA FUENTE %r \n\n"  % filename)
 
     fl = flujo.Flujo(filename)

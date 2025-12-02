@@ -1,12 +1,11 @@
-PROGRAMA p1;
-VAR i,x:ENTERO;
-i,x:REAL;
-a ;
+PROGRAM p1
+VAR i,x ENTERO;
+i,x:y;
 INICIO
   i:=0.0;
    MIENTRAS (i<>5) HACER
     INICIO 
       x:=i*4+4+5;
-      ESCRIBE(x);
+      ESCRIBE)x);
     FIN;
 FIN.

@@ -119,3 +119,7 @@ class ParentesisApertura(Componente):
 class ParentesisCierre(Componente):
   def __init__(self, n_linea):
     super().__init__(n_linea)
+
+class EOF(Componente):
+  def __init__(self, n_linea):
+    super().__init__(n_linea)
