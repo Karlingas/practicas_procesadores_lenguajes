@@ -88,11 +88,6 @@ class Sintactico:
         self.AnalizaInstrucciones(sync_set=["Punto"])
         
         self.Emparejar("Punto", None, 4, ["EOF"])
-        
-        if not self.lista_errores:
-            print("El programa es sintácticamente correcto.")
-        else:
-            print("Finalizado con errores recuperados.")
 
     # <decl_var> → VAR ( <lista_id> : <tipo_std> ; <decl_v> ) | λ
     def AnalizaDeclVar(self, sync_set):
