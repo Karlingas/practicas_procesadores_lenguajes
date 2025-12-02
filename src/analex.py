@@ -57,8 +57,11 @@ class Analex:
 
    if (next_ch == "."):
       next_ch = self.flujo.NewCar()
-      (number_float_list,_) = self.createNumList(next_ch)
-
+      if (next_ch.isalnum() ):
+         (number_float_list,_) = self.createNumList(next_ch)
+      else:
+         number_float_list=(0)
+         self.flujo.Develver()
       int_str = "".join(number_int_list)
       float_str = "".join(number_float_list)
 
