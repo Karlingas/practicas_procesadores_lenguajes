@@ -297,12 +297,12 @@ class Sintactico:
 ## Programa principal que lanza el analizador sintactico
 ####################################################
 if __name__=="__main__":
-    """ if len(argv) < 2:
+    if len(argv) < 2:
       print("\nUso: anasint.py <Ruta al archivo>\n")
       exit(1)
    
-    filename = argv[1] """
-    filename = "./Tests/Prueba1_MAL.eje"
+    filename = argv[1] 
+    #filename = "./Tests/Prueba1_MAL.eje"
     print ("PROGRAMA FUENTE %r \n\n"  % filename)
 
     fl = flujo.Flujo(filename)
