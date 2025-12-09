@@ -59,7 +59,7 @@ class tablaSimbolos():
         """
         if identificador not in self.tabla:
             raise noID
-        return self.tabla[id][2]
+        return self.tabla[identificador]
 
     def __str__(self):
         """
