@@ -6,10 +6,10 @@ tablasimbolos = tablaSimbolos()
 
 class AST:
     def __str__(self):
-        return self.arbol()
+        # Llama a arbol con indentación 0 por defecto
+        return self.arbol(0)
     
     def compsem(self):
-        # Método base, por defecto no hace nada
         pass
 
 # Nodo para errores o producciones vacías
@@ -18,8 +18,9 @@ class NodoVacio(AST):
         self.tipo = "VACIO"
         self.linea = linea
 
-    def arbol(self):
-        return '( "Vacio" )'
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        return f"{tab}( \"Vacio\" )"
 
 class NodoAsignacion(AST):
     def __init__(self, id_nombre, exp, linea):
@@ -29,25 +30,22 @@ class NodoAsignacion(AST):
         self.compsem()
 
     def compsem(self):
-        # 1. Comprobar si la variable existe
         if not tablasimbolos.Existe(self.id):
             print(f"ERROR Semántico línea {self.linea}: Variable '{self.id}' no definida.")
             return
 
-        # 2. Obtener tipo de la variable
-        atributos = tablasimbolos.Valor(self.id) # (tipo, naturaleza, valor)
+        atributos = tablasimbolos.Valor(self.id)
         tipo_var = atributos[0]
         
-        # 3. Comprobar compatibilidad de tipos
-        # Conversión implícita: Si variable es REAL y exp es ENTERO -> OK
         if tipo_var == 'REAL' and self.exp.tipo == 'ENTERO':
-            # Se permite (conversión implícita)
             pass
         elif tipo_var != self.exp.tipo:
             print(f"ERROR Semántico línea {self.linea}: Asignación incompatible. Variable '{self.id}' es {tipo_var} y expresión es {self.exp.tipo}.")
 
-    def arbol(self):
-        return '( "Asignacion"\n  "id: %s" \n%s\n)' % (self.id, self.exp)
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        # Llamamos a arbol del hijo con indent + 1
+        return f'{tab}( "Asignacion"\n{tab}    "id: {self.id}"\n{self.exp.arbol(indent+1)}\n{tab})'
 
 class NodoSi(AST):
     def __init__(self, exp, si, sino, linea):
@@ -61,9 +59,12 @@ class NodoSi(AST):
         if self.exp.tipo != 'BOOLEANO':
             print(f"ERROR Semántico línea {self.linea}: La condición del SI debe ser BOOLEANO, se encontró {self.exp.tipo}.")
 
-    def arbol(self):
-        sino_str = self.sino if self.sino else "()"
-        return '( "Si" "linea: %s" %s\n %s\n %s\n )' % (self.linea, self.exp, self.si, sino_str)
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        # Manejo especial para sino (si es None o es nodo)
+        sino_str = self.sino.arbol(indent+1) if self.sino else f"{tab}    ()"
+        
+        return f'{tab}( "Si" "linea: {self.linea}"\n{self.exp.arbol(indent+1)}\n{self.si.arbol(indent+1)}\n{sino_str}\n{tab})'
 
 class NodoMientras(AST):
     def __init__(self, exp, inst, linea):
@@ -76,8 +77,9 @@ class NodoMientras(AST):
         if self.exp.tipo != 'BOOLEANO':
             print(f"ERROR Semántico línea {self.linea}: La condición del MIENTRAS debe ser BOOLEANO, se encontró {self.exp.tipo}.")
 
-    def arbol(self):
-        return '( "Mientras" "linea: %s" %s\n %s\n )' % (self.linea, self.exp, self.inst)
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        return f'{tab}( "Mientras" "linea: {self.linea}"\n{self.exp.arbol(indent+1)}\n{self.inst.arbol(indent+1)}\n{tab})'
 
 class NodoLee(AST):
     def __init__(self, var, linea):
@@ -86,36 +88,37 @@ class NodoLee(AST):
         self.compsem()
     
     def compsem(self):
-        # La instrucción LEE implica variable simple (ENTERO o REAL) 
         if not tablasimbolos.Existe(self.var):
             print(f"ERROR Semántico línea {self.linea}: Variable '{self.var}' no definida en LEE.")
             return
-        
-        # Opcional: Validar que sea tipo simple si el enunciado lo exige estrictamente
 
-    def arbol(self):
-        return '( "Lee" "linea: %s" "Var: %s" )' % (self.linea, self.var)
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        return f'{tab}( "Lee" "linea: {self.linea}" "Var: {self.var}" )'
 
 class NodoEscribe(AST):
     def __init__(self, exp, linea):
         self.exp = exp
         self.linea = linea
-        # ESCRIBE permite expresiones 
 
-    def arbol(self):
-        return '( "Escribe" "linea: %s" %s )' % (self.linea, self.exp)
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        return f'{tab}( "Escribe" "linea: {self.linea}"\n{self.exp.arbol(indent+1)}\n{tab})'
 
 class NodoCompuesta(AST):
     def __init__(self, lsen, linea):
         self.lsen = lsen
         self.linea = linea
 
-    def arbol(self):
+    def arbol(self, indent=0):
+        tab = "    " * indent
         r = ""
         if self.lsen:
             for sent in self.lsen:
-                if sent: r += str(sent) + "\n"
-        return '( "Compuesta"\n %s)' % r
+                if sent: 
+                    # Importante: indentamos cada sentencia interna
+                    r += sent.arbol(indent + 1) + "\n"
+        return f'{tab}( "Compuesta"\n{r}{tab})'
 
 class NodoComparacion(AST):
     def __init__(self, izq, dcha, linea, op):
@@ -123,17 +126,17 @@ class NodoComparacion(AST):
         self.dcha = dcha
         self.linea = linea
         self.op = op
-        self.tipo = 'BOOLEANO' # Resultado de comparación siempre es bool
+        self.tipo = 'BOOLEANO'
         self.compsem()
 
     def compsem(self):
-        # Comprobar que los operandos sean comparables (numeros)
         tipos_validos = ['ENTERO', 'REAL']
         if self.izq.tipo not in tipos_validos or self.dcha.tipo not in tipos_validos:
              print(f"ERROR Semántico línea {self.linea}: Comparación invalida entre {self.izq.tipo} y {self.dcha.tipo}.")
 
-    def arbol(self):
-        return '( "Comparacion" "op: %s" "tipo: %s" "linea: %s" \n %s\n %s\n)' % (self.op, self.tipo, self.linea, self.izq, self.dcha)
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        return f'{tab}( "Comparacion" "op: {self.op}" "tipo: {self.tipo}" "linea: {self.linea}"\n{self.izq.arbol(indent+1)}\n{self.dcha.arbol(indent+1)}\n{tab})'
 
 class NodoAritmetico(AST):
     def __init__(self, izq, dcha, linea, op):
@@ -145,8 +148,6 @@ class NodoAritmetico(AST):
         self.compsem()
 
     def compsem(self):
-        # Inferencia de tipos y validación
-        # Si alguno es REAL, el resultado es REAL 
         if self.izq.tipo == 'REAL' or self.dcha.tipo == 'REAL':
             self.tipo = 'REAL'
         elif self.izq.tipo == 'ENTERO' and self.dcha.tipo == 'ENTERO':
@@ -155,8 +156,9 @@ class NodoAritmetico(AST):
             self.tipo = 'ERROR'
             print(f"ERROR Semántico línea {self.linea}: Operación aritmética inválida entre {self.izq.tipo} y {self.dcha.tipo}.")
 
-    def arbol(self):
-        return '( "Aritmetica" "op: %s" "tipo: %s" "linea: %s" \n %s\n %s\n)' % (self.op, self.tipo, self.linea, self.izq, self.dcha)
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        return f'{tab}( "Aritmetica" "op: {self.op}" "tipo: {self.tipo}" "linea: {self.linea}"\n{self.izq.arbol(indent+1)}\n{self.dcha.arbol(indent+1)}\n{tab})'
         
 class NodoLogico(AST):
     def __init__(self, izq, dcha, linea, op):
@@ -171,8 +173,9 @@ class NodoLogico(AST):
         if self.izq.tipo != 'BOOLEANO' or self.dcha.tipo != 'BOOLEANO':
              print(f"ERROR Semántico línea {self.linea}: Operación lógica '{self.op}' requiere operandos booleanos.")
 
-    def arbol(self):
-        return '( "Logica" "op: %s" "tipo: %s" \n %s\n %s\n)' % (self.op, self.tipo, self.izq, self.dcha)
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        return f'{tab}( "Logica" "op: {self.op}" "tipo: {self.tipo}"\n{self.izq.arbol(indent+1)}\n{self.dcha.arbol(indent+1)}\n{tab})'
 
 class NodoEntero(AST):
     def __init__(self, valor, linea):
@@ -180,8 +183,9 @@ class NodoEntero(AST):
         self.linea = linea
         self.tipo = 'ENTERO'
     
-    def arbol(self):
-        return '( "Entero" "valor: %s" "tipo: %s" )' % (self.valor, self.tipo)
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        return f'{tab}( "Entero" "valor: {self.valor}" "tipo: {self.tipo}" )'
 
 
 class NodoReal(AST):
@@ -190,8 +194,9 @@ class NodoReal(AST):
         self.linea = linea
         self.tipo = 'REAL'
     
-    def arbol(self):
-        return '( "Real" "valor: %s" "tipo: %s" )' % (self.valor, self.tipo)
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        return f'{tab}( "Real" "valor: {self.valor}" "tipo: {self.tipo}" )'
 
 class NodoBooleano(AST):
     def __init__(self, valor, linea):
@@ -199,8 +204,9 @@ class NodoBooleano(AST):
         self.linea = linea
         self.tipo = 'BOOLEANO'
     
-    def arbol(self):
-        return '( "Booleano" "valor: %s" "tipo: %s" )' % (self.valor, self.tipo)
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        return f'{tab}( "Booleano" "valor: {self.valor}" "tipo: {self.tipo}" )'
 
 class NodoAccesoVariable(AST):
     def __init__(self, var, linea):
@@ -214,9 +220,9 @@ class NodoAccesoVariable(AST):
             print(f"ERROR Semántico línea {self.linea}: Variable '{self.var}' no declarada.")
             self.tipo = 'ERROR'
         else:
-            # Recuperamos el tipo de la tabla
             atributos = tablasimbolos.Valor(self.var)
             self.tipo = atributos[0]
 
-    def arbol(self):
-        return '( "AccesoVariable" "v: %s" "tipo: %s" )' % (self.var, self.tipo)
+    def arbol(self, indent=0):
+        tab = "    " * indent
+        return f'{tab}( "AccesoVariable" "v: {self.var}" "tipo: {self.tipo}" )'
