@@ -1,7 +1,7 @@
 PROGRAMA p1;
 VAR i,x:ENTERO;
 INICIO
-  i:=0.0;
+  i:=0;
    MIENTRAS (i<>5) HACER
     INICIO 
       x:=i*4+4+5;
