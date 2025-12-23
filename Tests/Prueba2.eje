@@ -1,0 +1,5 @@
+PROGRAMA p1;
+VAR i:ENTERO;
+INICIO
+  i:=1+1.5;
+FIN.
