@@ -137,7 +137,9 @@ class tablaSimbolos():
         if identificador not in self.tabla:
             raise noID
         
-        self.tabla[identificador][0]=valorNuevo
+        (t, n, _) = self.tabla[identificador]
+        
+        self.tabla[identificador] = (t, n, valorNuevo)
 
     # Modifica todo de una
     def ModificarGeneral(self, identificador, tipoNuevo, naturalezaNueva, valorNuevo):
