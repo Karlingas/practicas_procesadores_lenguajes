@@ -1,5 +1,6 @@
 PROGRAMA p1;
-VAR i:ENTERO;
+VAR i,x:ENTERO;
 INICIO
   i:=1+1.5;
+  x:=69.420;
 FIN.

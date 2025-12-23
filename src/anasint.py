@@ -286,6 +286,19 @@ class Sintactico:
         
         # Obtenemos el nodo expresión y creamos la Asignación
         expresion = self.AnalizaExpresion(sync_set)
+        # Si tiene valor es un literal, guardamos su valor en la tabla
+        if hasattr(expresion, 'valor'):
+            try:
+                AST.tablasimbolos.ModificarValor(id_nombre, expresion.valor)
+            except Exception as e:
+                print(f"Error: No se pudo actualizar valor en tabla: {e}")
+        else: # Si es una expresión, guardamos su AST como objeto
+            try:
+                AST.tablasimbolos.ModificarValor(id_nombre, expresion) 
+            except Exception as e:
+                # Si la variable no existe en la tabla es un error semántico previo asi que no hacemos nada
+                pass
+
         return AST.NodoAsignacion(id_nombre, expresion, linea)
 
     # <inst_e/s>
@@ -444,12 +457,14 @@ if __name__=="__main__":
     S = Sintactico(anlex)
     
     arbol = S.AnalizaPrograma()
-    
+
+    # TODO: Indicar si el analisis SEMÁNTICO termino SATISFACTORIAMENTE o CON ERRORES
+
     if not S.lista_errores:
-        print ("Analisis sintactico SATISFACTORIO. Fichero :", filename, "CORRECTO")
+        print ("Analisis sintáctico SATISFACTORIO. Fichero :", filename, "CORRECTO")
         print ("\nTabla de Simbolos Final:\n", AST.tablasimbolos.tabla)
     else:
-        print ("Analisis sintactico CON ERRORES. Fichero :", filename, "ERRONEO")
+        print ("Analisis sintáctico CON ERRORES. Fichero :", filename, "ERRONEO")
         print ("\nLista de errores: (Nºerror, línea, mensaje)\n", S.lista_errores)
 
     print ("\nArbol de Sintaxis (AST):\n")

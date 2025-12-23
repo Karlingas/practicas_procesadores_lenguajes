@@ -9,6 +9,9 @@ class AST:
         # Llama a arbol con indentación 0 por defecto
         return self.arbol(0)
     
+    def __repr__(self):
+        return self.__str__()
+    
     def compsem(self):
         pass
 
