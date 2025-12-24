@@ -18,7 +18,7 @@ class AST:
         "LEE_VAR_NO_DEF":   "Variable '{}' no definida en LEE."
     }
 
-    @classmethod
+    @classmethod # Para poder llamarlo desde anasint sin instanciar
     def ErrorSemantico(cls, id_error, linea, *args):
         msg = cls.msg_dict.get(id_error, "Error semántico desconocido.") # Si no existe lanzamos un error genérico 
         if args:
