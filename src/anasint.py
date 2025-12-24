@@ -40,8 +40,8 @@ class Sintactico:
     def Avanza(self):
         self.token = self.lexico.Analiza()
 
-    def Error(self, nerr):
-        '''Muestra los mensajes de error'''
+    def Error_anasint(self, nerr):
+        '''Muestra los mensajes de error del análisis SINTÁCTICO'''
         linea = str(self.token.n_linea)
 
         error_msg = self.msg_dict.get(nerr, "Error desconocido")
@@ -55,7 +55,7 @@ class Sintactico:
             # Todo perfecto
             self.Avanza()
             return True
-        self.Error(nerr)
+        self.Error_anasint(nerr)
 
         if self.Token_en_set(sync_set):    # Si esta en los siguientes esperados 
             """ if self.token.cat == "Identif":
@@ -110,7 +110,7 @@ class Sintactico:
             # λ (Lambda), Si no es VAR no hacemos nada (siempre que venga algo válido después)
             if not self.Token_en_set(sync_set):
                 # Si lo que viene no es INICIO, entonces sí es un error
-                self.Error(5)
+                self.Error_anasint(5)
 
     # Procesa la declaración y los inserta en la tabla de símbolos
     def ProcesarLineaDeclaracion(self, sync_set):
@@ -128,6 +128,7 @@ class Sintactico:
         # para insertar todo en la tabla de símbolos
         for id_nombre in lista_ids:
             if AST.tablasimbolos.Existe(id_nombre): # Comprobar que no existen varios objetos con el mismo nombre
+                AST.AST.error_semantico = True
                 print(f"ERROR Semántico: Variable '{id_nombre}' redefinida.")
             else:
                 AST.tablasimbolos.Insertar(id_nombre, tipo_dato, "escalar", None) # id, tipo, naturaleza, valor
@@ -179,7 +180,7 @@ class Sintactico:
             tipo = self.token.valor
             self.Avanza()
         else:
-            self.Error(8)
+            self.Error_anasint(8)
             tipo = "ERROR"
         return tipo
 
@@ -269,9 +270,9 @@ class Sintactico:
                 # Bloque anidado, llamamos a AnalizaInstrucciones que devuelve NodoCompuesta
                 nodo_resultante = self.AnalizaInstrucciones(siguiente_sync)
             else:
-                self.Error(12)
+                self.Error_anasint(12)
         else:
-            self.Error(12)
+            self.Error_anasint(12)
         
         return nodo_resultante
 
@@ -321,7 +322,7 @@ class Sintactico:
             expr = self.AnalizaExpresion(sync_set + ["ParentesisCierre"])
             nodo = AST.NodoEscribe(expr, linea)
         else:
-            self.Error(12) # No se muy bien qué error debería ir
+            self.Error_anasint(12) # No se muy bien qué error debería ir
             return None
 
         if not self.Emparejar("ParentesisCierre", None, 9, sync_set):
@@ -430,7 +431,7 @@ class Sintactico:
             if not self.Emparejar("ParentesisCierre", None, 9, sync_set):
                 return None
         else:
-            self.Error(17) # Se esperaba factor
+            self.Error_anasint(17) # Se esperaba factor
             # Sincronización si falló el factor
             if not self.Token_en_set(sync_set):
                 self.Avanza()
@@ -458,14 +459,19 @@ if __name__=="__main__":
     
     arbol = S.AnalizaPrograma()
 
-    # TODO: Indicar si el analisis SEMÁNTICO termino SATISFACTORIAMENTE o CON ERRORES
-
     if not S.lista_errores:
-        print ("Analisis sintáctico SATISFACTORIO. Fichero :", filename, "CORRECTO")
-        print ("\nTabla de Simbolos Final:\n", AST.tablasimbolos.tabla)
+        print ("\nAnálisis SINTÁCTICO SATISFACTORIO.")
     else:
-        print ("Analisis sintáctico CON ERRORES. Fichero :", filename, "ERRONEO")
+        print ("\nAnálisis SINTÁCTICO CON ERRORES.")
         print ("\nLista de errores: (Nºerror, línea, mensaje)\n", S.lista_errores)
+
+    # TODO: Indicar si el analisis SEMÁNTICO termino SATISFACTORIAMENTE o CON ERRORES
+    if AST.AST.error_semantico:
+        print ("\nAnálisis SEMÁNTICO FINALIZADO CON ERRORES.")
+    else:
+        print ("\nAnálisis SEMÁNTICO SATISFACTORIO.")
+
+    print ("\nTabla de Simbolos Final:\n", AST.tablasimbolos.tabla)
 
     print ("\nArbol de Sintaxis (AST):\n")
     print(arbol)
