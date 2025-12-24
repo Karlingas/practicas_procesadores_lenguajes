@@ -5,8 +5,26 @@ from tablaSimbolos import tablaSimbolos
 tablasimbolos = tablaSimbolos()
 
 class AST:
-    # Para los errores del semántico
-    error_semantico = False
+    lista_errores_semantico = []
+
+    msg_dict = {
+        "VAR_NO_DEF":       "Variable '{}' no definida.",
+        "ASIG_INCOMP":      "Asignación incompatible. Variable '{}' es {} y expresión es {}.",
+        "COND_BOOL":        "La condición debe ser BOOLEANO, se encontró {}.",
+        "COMP_INV":         "Comparación inválida entre {} y {}.",
+        "OP_ARIT_INV":      "Operación aritmética inválida entre {} y {}.",
+        "OP_LOG_INV":       "Operación lógica '{}' requiere operandos booleanos.",
+        "VAR_REDEF":        "Variable '{}' redefinida.",
+        "LEE_VAR_NO_DEF":   "Variable '{}' no definida en LEE."
+    }
+
+    @classmethod
+    def ErrorSemantico(cls, id_error, linea, *args):
+        msg = cls.msg_dict.get(id_error, "Error semántico desconocido.") # Si no existe lanzamos un error genérico 
+        if args:
+            msg = msg.format(*args)
+        print(f"ERROR Semántico línea {linea}: {msg}")
+        cls.lista_errores_semantico.append((linea, msg))
 
     def __str__(self):
         # Llama a arbol con indentación 0 por defecto
@@ -37,7 +55,7 @@ class NodoAsignacion(AST):
 
     def compsem(self):
         if not tablasimbolos.Existe(self.id):
-            print(f"ERROR Semántico línea {self.linea}: Variable '{self.id}' no definida.")
+            AST.ErrorSemantico("VAR_NO_DEF", self.linea, self.id)
             return
 
         atributos = tablasimbolos.Valor(self.id)
@@ -46,8 +64,7 @@ class NodoAsignacion(AST):
         if tipo_var == 'REAL' and self.exp.tipo == 'ENTERO':
             pass
         elif tipo_var != self.exp.tipo:
-            AST.error_semantico = True
-            print(f"ERROR Semántico línea {self.linea}: Asignación incompatible. Variable '{self.id}' es {tipo_var} y expresión es {self.exp.tipo}.")
+            AST.ErrorSemantico("ASIG_INCOMP", self.linea, self.id, tipo_var, self.exp.tipo)
 
     def arbol(self, indent=0):
         tab = "    " * indent
@@ -64,8 +81,7 @@ class NodoSi(AST):
 
     def compsem(self):
         if self.exp.tipo != 'BOOLEANO':
-            AST.error_semantico = True
-            print(f"ERROR Semántico línea {self.linea}: La condición del SI debe ser BOOLEANO, se encontró {self.exp.tipo}.")
+            AST.ErrorSemantico("COND_BOOL", self.linea, self.exp.tipo)
 
     def arbol(self, indent=0):
         tab = "    " * indent
@@ -83,7 +99,7 @@ class NodoMientras(AST):
 
     def compsem(self):
         if self.exp.tipo != 'BOOLEANO':
-            print(f"ERROR Semántico línea {self.linea}: La condición del MIENTRAS debe ser BOOLEANO, se encontró {self.exp.tipo}.")
+            AST.ErrorSemantico("COND_BOOL", self.linea, self.exp.tipo)
 
     def arbol(self, indent=0):
         tab = "    " * indent
@@ -97,8 +113,7 @@ class NodoLee(AST):
     
     def compsem(self):
         if not tablasimbolos.Existe(self.var):
-            AST.error_semantico = True
-            print(f"ERROR Semántico línea {self.linea}: Variable '{self.var}' no definida en LEE.")
+            AST.ErrorSemantico("LEE_VAR_NO_DEF", self.linea, self.var)
             return
 
     def arbol(self, indent=0):
@@ -141,8 +156,7 @@ class NodoComparacion(AST):
     def compsem(self):
         tipos_validos = ['ENTERO', 'REAL']
         if self.izq.tipo not in tipos_validos or self.dcha.tipo not in tipos_validos:
-             AST.error_semantico = True
-             print(f"ERROR Semántico línea {self.linea}: Comparación invalida entre {self.izq.tipo} y {self.dcha.tipo}.")
+             AST.ErrorSemantico("COMP_INV", self.linea, self.izq.tipo, self.dcha.tipo)
 
     def arbol(self, indent=0):
         tab = "    " * indent
@@ -164,8 +178,7 @@ class NodoAritmetico(AST):
             self.tipo = 'ENTERO'
         else:
             self.tipo = 'ERROR'
-            AST.error_semantico = True
-            print(f"ERROR Semántico línea {self.linea}: Operación aritmética inválida entre {self.izq.tipo} y {self.dcha.tipo}.")
+            AST.ErrorSemantico("OP_ARIT_INV", self.linea, self.izq.tipo, self.dcha.tipo)
 
     def arbol(self, indent=0):
         tab = "    " * indent
@@ -182,8 +195,7 @@ class NodoLogico(AST):
 
     def compsem(self):
         if self.izq.tipo != 'BOOLEANO' or self.dcha.tipo != 'BOOLEANO':
-             AST.error_semantico = True
-             print(f"ERROR Semántico línea {self.linea}: Operación lógica '{self.op}' requiere operandos booleanos.")
+             AST.ErrorSemantico("OP_LOG_INV", self.linea, self.op)
 
     def arbol(self, indent=0):
         tab = "    " * indent
@@ -229,8 +241,7 @@ class NodoAccesoVariable(AST):
 
     def compsem(self):
         if not tablasimbolos.Existe(self.var):
-            AST.error_semantico = True
-            print(f"ERROR Semántico línea {self.linea}: Variable '{self.var}' no declarada.")
+            AST.ErrorSemantico("VAR_NO_DEF", self.linea, self.var)
             self.tipo = 'ERROR'
         else:
             atributos = tablasimbolos.Valor(self.var)
