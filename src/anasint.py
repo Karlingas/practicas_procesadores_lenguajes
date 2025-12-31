@@ -463,7 +463,6 @@ if __name__=="__main__":
         print ("\nAnálisis SINTÁCTICO CON ERRORES.")
         print ("\nLista de errores sintácticos: (Nºerror, línea, mensaje)\n", S.lista_errores_sintactico)
 
-    # TODO: Indicar si el analisis SEMÁNTICO termino SATISFACTORIAMENTE o CON ERRORES
     if not AST.AST.lista_errores_semantico:
         print ("\nAnálisis SEMÁNTICO SATISFACTORIO.")
     else:
