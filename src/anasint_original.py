@@ -9,10 +9,10 @@ import sys
 from sys import argv
 
 class Sintactico:
-
-#Constructor de la clase que implementa el Analizador Sintactico
-#Solicita el primer componente lexico 
     def __init__(self, lexico):
+        """ Constructor de la clase que implementa el Analizador Sintactico
+        Solicita el primer componente lexico """ 
+
         self.lexico= lexico
         self.token=self.lexico.Analiza()
         self.lista_errores = []
@@ -37,10 +37,11 @@ class Sintactico:
         }
 
     def Avanza(self):
+        '''Avanza al siguiente elemento léxico'''
         self.token = self.lexico.Analiza()
 
     def Error(self, nerr):
-        '''Muestra los mensajes de error'''
+        '''Muestra los mensajes de error y los añade a una lista'''
         linea = str(self.token.n_linea)
 
         error_msg = self.msg_dict.get(nerr, "Error desconocido")
@@ -49,7 +50,8 @@ class Sintactico:
 
     
     def Emparejar(self, cat, val, nerr, sync_set):
-        '''Modo Pánico'''
+        ''' Modo Pánico. Lanza error si el token actual no es el esperado. 
+            Intenta sincronizar para seguir analizando en caso de error. '''
         if self.token.cat == cat and (val is None or self.token.valor == val):
             # Todo perfecto
             self.Avanza()
@@ -57,11 +59,9 @@ class Sintactico:
         self.Error(nerr)
 
         if self.Token_en_set(sync_set):    # Si esta en los siguientes esperados 
-            """ if self.token.cat == "Identif":
-                self.Avanza() """
             return True                     # Asumimos que el token faltaba y continuamos
 
-        # Recuperación, consumimos tokens no válidos
+        # Consumimos tokens no válidos si los hay
         while self.token.cat != "EOF":
             if self.token.cat == cat and (val is None or self.token.valor == val):
                 self.Avanza()
@@ -69,12 +69,12 @@ class Sintactico:
             if self.Token_en_set(sync_set):
                 return True
             self.Avanza()
-        return False
+        return False  # No se ha conseguido la sincronizacion
 
     def Token_en_set(self, token_set):
         '''Devuelve si el token actual está en token_set'''
         return (self.token.cat in token_set) or \
-               (self.token.cat == "PR" and self.token.valor in token_set)
+               (self.token.cat == "PR" and self.token.valor in token_set) # Si es una PR hay que comprobar el valor (que PR es en concreto)
 
 
     '''REGLAS GRAMATICALES'''
@@ -284,9 +284,9 @@ class Sintactico:
             self.AnalizaExpresion(["ParentesisCierre"])
             if not self.Emparejar("ParentesisCierre", None, 9, sync_set):
                 return 
-        else:
+        else: # Puede ser varios tóken, por lo que lanzamos el error sin llamar a Emparejar
             self.Error(17) # Se esperaba factor
-            # Sincronización si falló el factor
+            # Sincronización
             if not self.Token_en_set(sync_set):
                 self.Avanza()
        

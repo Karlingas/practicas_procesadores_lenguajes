@@ -164,6 +164,15 @@ class Flujo:
             str: Ruta del archivo y contenido del flujo.
         """
         return f'Ruta={self.ruta}\nFlujo:\n{self.flujo}'
+    
+    def __repr__(self):
+        """
+        Representación en cadena del flujo. Igual a __str__().
+
+        Returns:
+            str: Valor devuelto por __str()__.
+        """
+        return self.__str__()
 
     
 def pruebas():

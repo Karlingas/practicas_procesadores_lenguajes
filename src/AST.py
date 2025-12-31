@@ -140,7 +140,7 @@ class NodoCompuesta(AST):
         if self.lsen:
             for sent in self.lsen:
                 if sent: 
-                    # Importante: indentamos cada sentencia interna
+                    # indentamos cada sentencia interna para verlo mejor
                     r += sent.arbol(indent + 1) + "\n"
         return f'{tab}( "Compuesta"\n{r}{tab})'
 

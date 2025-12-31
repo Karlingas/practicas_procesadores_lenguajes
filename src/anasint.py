@@ -10,10 +10,10 @@ from sys import argv
 import AST 
 
 class Sintactico:
-
-#Constructor de la clase que implementa el Analizador Sintactico
-#Solicita el primer componente lexico 
     def __init__(self, lexico):
+        """ Constructor de la clase que implementa el Analizador Sintactico
+        Solicita el primer componente lexico """ 
+
         self.lexico= lexico
         self.token=self.lexico.Analiza()
         self.lista_errores_sintactico = []
@@ -38,19 +38,20 @@ class Sintactico:
         }
 
     def Avanza(self):
+        '''Avanza al siguiente elemento léxico'''
         self.token = self.lexico.Analiza()
 
     def ErrorAnasint(self, nerr):
-        '''Muestra los mensajes de error del análisis SINTÁCTICO'''
+        """ Muestra los mensajes de error del análisis SINTÁCTICO y los añade a su lista """
         linea = str(self.token.n_linea)
 
         error_msg = self.msg_dict.get(nerr, "Error desconocido")
         print(f"Linea: {linea} ERROR: {error_msg}")
         self.lista_errores_sintactico.append((nerr, linea, error_msg))
 
-    
     def Emparejar(self, cat, val, nerr, sync_set):
-        '''Modo Pánico'''
+        ''' Modo Pánico. Lanza error si el token actual no es el esperado. 
+            Intenta sincronizar para seguir analizando en caso de error. '''
         if self.token.cat == cat and (val is None or self.token.valor == val):
             # Todo perfecto
             self.Avanza()
@@ -58,11 +59,9 @@ class Sintactico:
         self.ErrorAnasint(nerr)
 
         if self.Token_en_set(sync_set):    # Si esta en los siguientes esperados 
-            """ if self.token.cat == "Identif":
-                self.Avanza() """
-            return True                     # Asumimos que el token faltaba y continuamos
+            return True                     # asumimos que el token faltaba y continuamos
 
-        # Recuperación, consumimos tokens no válidos
+        # Consumimos tokens no válidos si los hay
         while self.token.cat != "EOF":
             if self.token.cat == cat and (val is None or self.token.valor == val):
                 self.Avanza()
@@ -70,12 +69,12 @@ class Sintactico:
             if self.Token_en_set(sync_set):
                 return True
             self.Avanza()
-        return False
+        return False # No se ha conseguido la sincronizacion
 
     def Token_en_set(self, token_set):
         '''Devuelve si el token actual está en token_set'''
         return (self.token.cat in token_set) or \
-               (self.token.cat == "PR" and self.token.valor in token_set)
+               (self.token.cat == "PR" and self.token.valor in token_set) # Si es una PR hay que comprobar el valor (que PR es en concreto)
 
 
     '''REGLAS GRAMATICALES'''
@@ -201,7 +200,7 @@ class Sintactico:
 
     # Función auxiliar recursiva para ( <instrucción> ; )*
     def AnalizaBloqueInstrucciones(self, sync_set):
-        lista = []
+        lista_instrucciones = []
         primeros_inst = ["Identif", "LEE", "ESCRIBE", "SI", "MIENTRAS"]
         
         # Si el token actual puede empezar una instrucción
@@ -209,19 +208,19 @@ class Sintactico:
             # Guardamos el nodo de la instrucción
             nodo = self.AnalizaInstruccion(sync_set)
             if nodo: 
-                lista.append(nodo)
+                lista_instrucciones.append(nodo)
 
             if not self.Emparejar("PtoComa", None, 3, primeros_inst + ["FIN"]):
-                return lista
+                return lista_instrucciones
             
             # RECURSION para ver si hay otra instrucción
             # Extendemos la lista actual con lo que venga de la recursión
-            lista.extend(self.AnalizaBloqueInstrucciones(sync_set))
+            lista_instrucciones.extend(self.AnalizaBloqueInstrucciones(sync_set))
         else:
             # λ (Si encontramos FIN o algo del sync_set)
             pass
         
-        return lista
+        return lista_instrucciones
 
     # <instrucción>
     def AnalizaInstruccion(self, sync_set):
@@ -369,10 +368,10 @@ class Sintactico:
                  nuevo_nodo = AST.NodoAritmetico(heredado, dcha, linea, op)
 
             # Llamada recursiva para permitir múltiples sumas o multiplicaciones: 1 + 2 + 3
-            # Pasamos el nuevo nodo como izquierdo para la siguiente operación
+            # Pasamos el nuevo nodo como izquierdo (heredado) para la siguiente operación
             return self.AnalizaExprSimplePrima(sync_set, nuevo_nodo) 
         # λ
-        return heredado
+        return heredado # heredado es el término de la anterior regla, si expr_simple' es λ no se puede hacer nodo y devolvemos el heredado
 
     # <término> → <factor> <resto_term>
     def AnalizaTermino(self, sync_set):
@@ -429,10 +428,10 @@ class Sintactico:
             nodo = self.AnalizaExpresion(["ParentesisCierre"])
             if not self.Emparejar("ParentesisCierre", None, 9, sync_set):
                 return None
-        else:
+        else: # Puede ser varios tóken, por lo que lanzamos el error sin llamar a Emparejar
             self.ErrorAnasint(17) # Se esperaba factor
-            # Sincronización si falló el factor
-            if not self.Token_en_set(sync_set):
+            # Sincronización consumiendo tokens inválidos
+            if not self.Token_en_set(sync_set): 
                 self.Avanza()
             nodo = AST.NodoVacio(linea)
        
@@ -444,12 +443,12 @@ class Sintactico:
 ## Programa principal que lanza el analizador sintactico
 ####################################################
 if __name__=="__main__":
-    """ if len(argv) < 2:
-      print("\nUso: anasint.py <Ruta al archivo>\n")
-      exit(1)
+    if len(argv) < 2:
+        print("\nUso: anasint.py <Ruta al archivo>\n")
+        exit(1)
    
-    filename = argv[1]  """
-    filename = "./Tests/Prueba2.eje"
+    filename = argv[1]
+    #filename = "./Tests/Prueba2.eje"
     print ("PROGRAMA FUENTE %r \n\n"  % filename)
 
     fl = flujo.Flujo(filename)
