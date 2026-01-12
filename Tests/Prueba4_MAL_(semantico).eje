@@ -1,0 +1,13 @@
+PROGRAMA p1;
+VAR i,x:ENTERO;
+INICIO
+  i:=0;
+  MIENTRAS (i O 5) HACER
+    INICIO 
+      x := i + CIERTO;
+      ESCRIBE(x);
+      SI (x > CIERTO) ENTONCES
+        i := 1;
+    FIN;
+FIN.
+
